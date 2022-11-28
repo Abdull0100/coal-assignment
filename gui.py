@@ -238,7 +238,6 @@ def execute_instruction(opcode,destination,source):
 
 
 
-
 def submit():
     complete_instruction = ""
     if opChoice.get() != "OpCode":
@@ -246,7 +245,7 @@ def submit():
         if destinationChoice.get() != "Destination":
             complete_instruction += " " + destinationChoice.get()
             if sourceChoice.get() != "Source":
-                execute_instruction(opChoice.get(), destinationChoice.get(), sourceChoice.get())
+                op_code_create(opChoice.get(), destinationChoice.get(), sourceChoice.get())
                 complete_instruction += ", " + sourceChoice.get()
                 instruction_label.config(text=complete_instruction)
             else:
@@ -262,9 +261,9 @@ def memory_ui(master):
     global memory_title
     global memory_frame
 
-    memory_frame = Frame(master, bg="black", width=400, height=600,
+    memory_frame = Frame(master, bg="black", width=400, height=602,
                          relief=RAISED, highlightbackground="black", highlightthickness=1)
-    memory_frame.place(anchor=W, x=800, y=399)
+    memory_frame.place(anchor=W, x=800, y=400)
 
     memory_title = Label(
         memory_frame, text="Memory",font="calibri 10 bold", bg="black",fg="#00ff00", width=50, height=2, highlightbackground="#12123b", highlightthickness=3)
@@ -282,6 +281,19 @@ def memory_ui(master):
             memory_frame, text="0x" + hex(0)[2:].upper(), width=30, height=2, bg="#12123b",fg="#00ff00", highlightbackground="black", highlightthickness=1, relief=RAISED))
         memory_values[i].place(anchor=W, x=137, y=75 + i * 30)
 
+def machine_code_ui(master):
+
+    machinecode_frame = Frame(master, bg="black", width=427, height=309)
+    machinecode_frame.place(anchor=W, x=340, y=550)
+
+    machinecode_title = Label(machinecode_frame, text="Machine Code",font="calibri 10 bold", bg="black",fg="#00ff00", width=46, height=2, highlightbackground="#12123b", highlightthickness=3)
+    machinecode_title.place(anchor=W, x=1, y=20)
+
+    machinecode_label = Label(machinecode_frame, text="0x" + hex(0)[2:].upper(), width=50, height=2, bg="#12123b",fg="#00ff00", highlightbackground="black", highlightthickness=1, relief=RAISED)
+    machinecode_label.place(anchor=W, x=12, y=75)
+
+
+
 
 global root
 root = Tk()
@@ -293,5 +305,6 @@ add_title(root)
 register_ui(root)
 instruction_ui(root)
 memory_ui(root)
+machine_code_ui(root)
 
 root.mainloop()
