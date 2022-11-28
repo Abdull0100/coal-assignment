@@ -24,8 +24,10 @@ class Register:
                "neg": 1111011, #1111011w oo011mmm disp (reg, mem)
                "sub": [000101, #000101dw oorrrmmm disp (reg,reg/mem,reg/reg,mem)
                        100000, #100000sw oo101mmm disp data (reg,imm/mem,imm)
-                       0010110]#0010110w data (acc,imm)
-                
+                       0010110],#0010110w data (acc,imm)
+               "cmp": [001110, #001110dw oorrrmmm disp (reg,reg/mem,reg/reg,mem)
+                       100000, #100000sw oo111mmm disp data (reg,imm/mem,imm)
+                       0001111]#0001111w data (acc,imm)      
               }
 
 def validater(instruction):
