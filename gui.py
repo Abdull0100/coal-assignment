@@ -1,7 +1,8 @@
 from tkinter import *
 
+
 class Register:
-    
+
     def __init__(self, name, value) -> None:
         self.name = name
         self.value = value
@@ -15,44 +16,64 @@ general_purpose_registers = ["ax", "bx", "cx", "dx", "sp", "bp", "si", "di"]
 for i in range(len(general_purpose_registers)):
     general_purpose_registers[i] = Register(general_purpose_registers[i], 0)
 
-print(general_purpose_registers)
-
+# all the instructions
 opcodes = {
     "mov": {
-            "mov1": '100010',  # 100010dw oorrrmmm disp (reg,reg/mem,reg/reg,mem)
-            "mov2": '1100011',  # 1100011w oo000mmm disp data (mem,imm)
-            "mov3": '1011',  # 1011wrrr data (reg,imm)
-            "mov4": '101000' # 101000dw disp (mem,acc/acc,mem)
-            },  
+        "mov1": '100010',  # 100010dw oorrrmmm disp (reg,reg/mem,reg/reg,mem)
+        "mov2": '1100011',  # 1100011w oo000mmm disp data (mem,imm)
+        "mov3": '1011',  # 1011wrrr data (reg,imm)
+        "mov4": '101000'  # 101000dw disp (mem,acc/acc,mem)
+    },
 
 
 
     "add": {
-            "add1" : '000000',  # 000000dw oorrrmmm disp (reg,reg/reg,mem/mem,reg)
-            "add2" : '100000' # 100000sw oo000mmm disp data (reg,imm/mem,imm/acc,imm)
-            },  
+        "add1": '000000',  # 000000dw oorrrmmm disp (reg,reg/reg,mem/mem,reg)
+        # 100000sw oo000mmm disp data (reg,imm/mem,imm/acc,imm)
+        "add2": '100000'
+    },
 
     "dec": {
-            "dec1" : '1111111',  # 1111111w oo001mmm disp (reg8, mem)
-            "dec2" : '01001'   # 01001rrr (reg16)
-            },
+        "dec1": '1111111',  # 1111111w oo001mmm disp (reg8, mem)
+        "dec2": '01001'   # 01001rrr (reg16)
+    },
 
     "inc": '1111111',  # 1111111w oo000mmm disp (reg8,mem,reg16)
 
     "neg": '1111011',  # 1111011w oo011mmm disp (reg, mem)
 
     "sub": {
-            "sub1" : '000101',  # 000101dw oorrrmmm disp (reg,reg/mem,reg/reg,mem)
-            "sub2" : '100000',  # 100000sw oo101mmm disp data (reg,imm/mem,imm)
-            "sub3" : '0010110'  # 0010110w data (acc,imm)
-            },
+        "sub1": '000101',  # 000101dw oorrrmmm disp (reg,reg/mem,reg/reg,mem)
+        "sub2": '100000',  # 100000sw oo101mmm disp data (reg,imm/mem,imm)
+        "sub3": '0010110'  # 0010110w data (acc,imm)
+    },
 
     "cmp": {
-            "cmp1" : '001110',  # 001110dw oorrrmmm disp (reg,reg/mem,reg/reg,mem)
-            "cmp2" : '100000', # 100000sw oo111mmm disp data (reg,imm/mem,imm)
-            "cmp3" : '0001111' 
-            }      
+        "cmp1": '001110',  # 001110dw oorrrmmm disp (reg,reg/mem,reg/reg,mem)
+        "cmp2": '100000',  # 100000sw oo111mmm disp data (reg,imm/mem,imm)
+        "cmp3": '0001111'
+    }
 
+}
+
+
+memory_locations = {
+    "0000": "00",
+    "0001": "00",
+    "0002": "00",
+    "0003": "00",
+    "0004": "00",
+    "0005": "00",
+    "0006": "00",
+    "0007": "00",
+    "0008": "00",
+    "0009": "00",
+    "000A": "00",
+    "000B": "00",
+    "000C": "00",
+    "000D": "00",
+    "000E": "00",
+    "000F": "00",
 }
 
 
@@ -110,36 +131,36 @@ def register_ui(master):
                                             width=30, height=4, bg="white", highlightbackground="black", highlightthickness=1, relief=RAISED)
         variable_names_remaining[i].place(anchor=W, x=50, y=358 + i * 70)
 
-def submit():
-    print("submit")
-
-
 
 def instruction_ui(master):
-    global opcodes
-    global general_purpose_registers
+    global opChoice
+    global destinationChoice
+    global sourceChoice
+    global instruction_label
 
-    instruction_frame = Frame(master, bg="pink", width=400, height=270,
+    instruction_frame = Frame(master, bg="pink", width=425, height=270,
                               relief=RAISED, highlightbackground="black", highlightthickness=1)
-    instruction_frame.place(anchor=W, x=340, y=230)
+    instruction_frame.place(anchor=W, x=340, y=232)
 
     instruction_title = Label(
-        instruction_frame, text="Instruction", bg="purple", width=50, height=2)
+        instruction_frame, text="Instruction", bg="purple", width=53, height=2)
     instruction_title.place(anchor=W, x=0, y=20)
 
     opcode_options = [opcodes for opcodes in opcodes.keys()]
-    
+
     opChoice = StringVar()
-    destinatinChoice = StringVar()
+    destinationChoice = StringVar()
     sourceChoice = StringVar()
 
     opChoice.set("OpCode")
-    destinatinChoice.set("Destination")
+    destinationChoice.set("Destination")
     sourceChoice.set("Source")
-    
-    opCodeOption_menu = OptionMenu(instruction_frame, opChoice, *opcode_options)
-    opCodeOption_menu.place(anchor=W, x=0, y=75)
-    opCodeOption_menu.config(width=10, height=2, bg="white", highlightbackground="black", highlightthickness=1, relief=RAISED)
+
+    instruction_entry = OptionMenu(
+        instruction_frame, opChoice, *opcode_options)
+    instruction_entry.place(anchor=W, x=5, y=75)
+    instruction_entry.config(width=10, height=2, bg="white",
+                             highlightbackground="black", highlightthickness=1, relief=RAISED)
 
     destination_options = []
     source_options = []
@@ -150,58 +171,77 @@ def instruction_ui(master):
     source_options = destination_options.copy()
     source_options.append("immediate")
 
-    destinationOption_menu = OptionMenu(instruction_frame, destinatinChoice, *destination_options)
-    destinationOption_menu.place(anchor=W, x=150, y=75)
-    destinationOption_menu.config(width=10, height=2, bg="white", highlightbackground="black", highlightthickness=1, relief=RAISED)
+    destination_entry = OptionMenu(
+        instruction_frame, destinationChoice, *destination_options)
+    destination_entry.place(anchor=W, x=149, y=75)
+    destination_entry.config(width=10, height=2, bg="white",
+                             highlightbackground="black", highlightthickness=1, relief=RAISED)
 
-    sourceOption_menu = OptionMenu(instruction_frame, sourceChoice, *source_options)
-    sourceOption_menu.place(anchor=W, x=300, y=75)
-    sourceOption_menu.config(width=10, height=2, bg="white", highlightbackground="black", highlightthickness=1, relief=RAISED)
+    source_entry = OptionMenu(instruction_frame, sourceChoice, *source_options)
+    source_entry.place(anchor=W, x=295, y=75)
+    source_entry.config(width=10, height=2, bg="white",
+                        highlightbackground="black", highlightthickness=1, relief=RAISED)
 
-    submit_button = Button(instruction_frame, text="Submit", width=10, height=2, bg="white", highlightbackground="black", highlightthickness=1, relief=RAISED, command=submit)
-    submit_button.place(anchor=W, x=0, y=150)
+    instruction_label = Label(
+        instruction_frame, width=51, height=2, bg="black", fg="#00ff00")
+    instruction_label.place(anchor=W, x=5, y=150)
 
+    submit_button = Button(instruction_frame, text="Submit", width=10, height=1, bg="white",
+                           highlightbackground="black", highlightthickness=1, relief=RAISED, command=submit)
+    submit_button.place(anchor=W, x=150, y=250)
+
+
+def submit():
+    complete_instruction = ""
+    if opChoice.get() != "OpCode":
+        complete_instruction += opChoice.get()
+        if destinationChoice.get() != "Destination":
+            complete_instruction += " " + destinationChoice.get()
+            if sourceChoice.get() != "Source":
+                complete_instruction += ", " + sourceChoice.get()
+                instruction_label.config(text=complete_instruction)
+            else:
+                instruction_label.config(text="Invalid Instruction")
+        else:
+            instruction_label.config(text="Invalid Instruction")
+    else:
+        instruction_label.config(text="Invalid Instruction")
+
+def memory_ui(master):
+    global memory_labels
+    global memory_values
+    global memory_title
+    global memory_frame
+
+    memory_frame = Frame(master, bg="pink", width=400, height=600,
+                         relief=RAISED, highlightbackground="black", highlightthickness=1)
+    memory_frame.place(anchor=W, x=800, y=395)
+
+    memory_title = Label(
+        memory_frame, text="Memory", bg="purple", width=50, height=2)
+    memory_title.place(anchor=W, x=0, y=20)
+
+    memory_labels = []
+    memory_values = []
+
+    for i in range(16):
+        memory_labels.append(Label(
+            memory_frame, text="0x00" + hex(i)[2:].upper(), width=10, height=2, bg="white", highlightbackground="black", highlightthickness=1, relief=RAISED))
+        memory_labels[i].place(anchor=W, x=5, y=75 + i * 30)
+
+        memory_values.append(Label(
+            memory_frame, text="0x" + hex(0)[2:].upper(), width=30, height=2, bg="white", highlightbackground="black", highlightthickness=1, relief=RAISED))
+        memory_values[i].place(anchor=W, x=100, y=75 + i * 30)
 
 
 
 root = Tk()
-root.geometry("900x900")
+root.geometry("1500x1000")
 
 
 add_title(root)
 register_ui(root)
 instruction_ui(root)
-# window.config(background="black")
-# window.geometry("500x500")
-
-# title = Frame(window)
-# title.pack(side=TOP)
-
-# heading = Label(title,text="Intel 8086",bg="black",fg="#00ff00")
-# heading.pack(side=TOP)
-
-# # instruction_input = Entry(window,bg="black",fg="#00ff00")
-# # instruction_input.pack()
-
-# instruction = Frame(window)
-# instruction.place(x=180,y=0)
-
-
-# options = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
-
-
-# clicked = StringVar()
-
-# clicked.set("Monday")
-
-
-# opcode = OptionMenu(window,clicked,*options)
-# opcode.pack(side=LEFT,anchor="c")
-
-# opcode2 = OptionMenu(window,clicked,*options)
-# opcode2.pack(side=LEFT,anchor="c")
-
-# opcode3 = OptionMenu(window,clicked,*options)
-# opcode3.pack(side=LEFT,anchor="c")
+memory_ui(root)
 
 root.mainloop()
