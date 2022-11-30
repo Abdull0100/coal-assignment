@@ -7,12 +7,38 @@ class GeneralRegister():
     def __str__(self) -> str:
         return f"{self.name} = {self.value}"
     
-class DividableRegisters(GeneralRegister):
+class LowerRegister(GeneralRegister):
+    def __init__(self, name, value):
+        super().__init__(name, value)
+        self.lower = self.contents[2:4]
+        self.valstr = ''.join(self.lower)
+
+    def __str__(self) -> str:
+        return f"{self.name} = {self.valstr}"
+
+class HigherRegister(GeneralRegister):
     def __init__(self, name, value):
         super().__init__(name, value)
         self.higher = self.contents[0:2]
-        self.lower = self.contents[2:4]
-    
+        self.valstr = ''.join(self.higher)
+
+    def __str__(self) -> str:
+        return f"{self.name} = {self.valstr}"
+
+class MachineCode():
+	#codes is for opcodes, dw and mode are self explanatory
+	def __init__(self, code, d, w, mode, rrr, mmm):
+		self.code = code
+		self.d = d
+		self.w = w
+		self.mode = mode
+		self.rrr = rrr
+		self.mmm = mmm
+	
+	#def __str__(self) -> str:
+	#	return f"{self.code}{self.d}{self.w}{self.mode}{self.rrr}{self.mmm}"
+
+
 opcodes =       {"mov": ['100010', #100010dw oorrrmmm disp (reg,reg/mem,reg/reg,mem)
                        '1100011',#1100011w oo000mmm disp data (mem,imm)
                        '1011',   #1011wrrr data (reg,imm)
@@ -36,5 +62,9 @@ opcodes =       {"mov": ['100010', #100010dw oorrrmmm disp (reg,reg/mem,reg/reg,
                        '0001111']#0001111w data (acc,imm)      
               }
 
-x = DividableRegisters("AX", "0000")
-print(x.__str__())
+inp1 = input("Enter the instruction: ")
+inp2 = input("Enter the first register: ")
+inp3 = input("Enter the second register: ")
+
+if inp1.lower() in opcodes.keys():
+	if inp2.lower() == "ax" and inp3.lower() = "bx":
