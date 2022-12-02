@@ -1,0 +1,382 @@
+* {
+  margin: 0;
+  padding: 0;
+  z-index: 3;
+  /* background-color: blueviolet; */
+}
+
+#main {
+  display: grid;
+  height: 92vh;
+  grid-template-columns: 69% 29%;
+  border: 1px solid black;
+  max-width: 99vw;
+  gap: 2rem;
+}
+
+#cpu_memory {
+  height: 100%;
+  width: 100%;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  margin-right: 1rem;
+}
+
+#cpu {
+  height: auto;
+  width: 100%;
+  border: 1px solid black;
+  display: flex;
+  justify-content: space-between;
+}
+
+#memory {
+  height: auto;
+  width: 100%;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+}
+
+.layers {
+  display: flex;
+  width: 100%;
+  /* align-content: space-between; */
+  /* justify-content: center; */
+  background-color: #00ff00;
+  /* align-items: center */
+  justify-content: center;
+}
+
+#processor {
+  height: 30rem;
+  width: 45rem;
+  border: 1px solid black;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  z-index: 0;
+}
+
+#datapath {
+  height: auto;
+  width: 30rem;
+  border: 1px solid black;
+}
+
+.memory_cell {
+  height: 3rem;
+  width: 5rem;
+  border: 1px solid black;
+  margin: 1rem;
+}
+
+#reg_layer1 {
+  height: auto;
+  width: 12rem;
+  border: 1px solid black;
+  margin-left: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+#reg_layer2 {
+  height: auto;
+  width: 12rem;
+  border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+.register_cells {
+  height: 6rem;
+  width: 8rem;
+  border: 1px solid black;
+  margin: 1rem;
+  margin-left: 2rem;
+}
+
+#controller {
+  height: 12rem;
+  width: 12rem;
+  background-image: url(./controller.png);
+  margin-top: 2rem;
+  background-position: center;
+  background-size: contain;
+  background-color: white;
+  /* border: 4px solid black; */
+  animation: fancy 5s infinite;
+  box-shadow:  5px 5px 23px #949494,
+             -5px -5px 23px #ffffff;
+  border-radius: 1rem;
+
+}
+
+@keyframes fancy {
+    0%{
+        border:4px solid rgb(187, 119, 244);
+        box-shadow:  5px 5px 23px rgb(241, 151, 151),
+             -5px -5px 23px rgb(187, 119, 244);
+    }
+    25%{
+        border:4px solid rgb(241, 151, 151);
+        box-shadow:  5px 5px 23px rgb(187, 119, 244),
+             -5px -5px 23px #ffffff;
+    }
+    50%{
+        border:4px solid violet;
+        box-shadow:  5px 5px 23px violet,
+             -5px -5px 23px pink;
+    }
+    75%{
+        border:4px solid pink;
+        box-shadow:  5px 5px 23px pink,
+             -5px -5px 23px rgb(214, 93, 214);
+    }
+    100%{
+        border:4px solid rgb(214, 93, 214);
+        box-shadow:  5px 5px 23px rgb(214, 93, 214),
+             -5px -5px 23px rgb(187, 119, 244);
+    }
+}
+
+
+#pc {
+  height: 4rem;
+  width: 15%;
+  background-color: white;
+  /* background-image: url(./memory.svg); */
+  border: .25rem solid black;
+  border-radius: .25rem;
+  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+#pc_inside{
+    height: 2rem;
+    width: 80%;
+    border: .25rem solid black;
+    border-radius: .25rem;
+    
+    margin-top: auto;
+    margin-bottom: auto;
+    text-align: center;
+    padding: auto;
+    font-size: x-large;
+    font-weight: 900;
+}
+
+
+#ir {
+  height: 8rem;
+  width: 50%;
+  border: 1px solid black;
+  background-color: aquamarine;
+}
+
+#alu {
+  height: 8rem;
+  width: 25rem;
+  border: 1px solid black;
+  margin-top: 3rem;
+  margin-left: auto;
+  margin-right: auto;
+  background: linear-gradient(to right, #44a08d, #093637);
+}
+
+#alu_registers {
+  height: 11rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 5rem;
+  padding-top: auto;
+  padding-bottom: auto;
+  background-color: aliceblue;
+}
+
+#reg1 {
+  height: 8rem;
+  width: 8rem;
+  border: 1px solid black;
+  margin-left: 3rem;
+}
+
+#reg2 {
+  height: 8rem;
+  width: 8rem;
+  border: 1px solid black;
+  margin-right: 3rem;
+}
+
+.databus {
+  height: 10rem;
+  width: 0.5rem;
+  background-color: black;
+  border-radius: 1rem;
+  position: absolute;
+  z-index: 2;
+}
+
+/* pc controller */
+#bus1 {
+  top: 16rem;
+  left: 11rem;
+  background-color: black;
+}
+#bus2 {
+  top: 16rem;
+  left: 11rem;
+  width: 10rem;
+  height: 0.5rem;
+  background-color: black;
+}
+
+/* ir memory right left */
+#bus3 {
+  top: 32rem;
+  left: 30rem;
+  height: 15rem;
+}
+#bus4 {
+  top: 32rem;
+  left: 10rem;
+  height: 15rem;
+}
+
+/* ir controller */
+#bus5 {
+  top: 16rem;
+  left: 35rem;
+}
+#bus6 {
+  top: 16rem;
+  left: 25.5rem;
+  height: 0.5rem;
+  width: 10rem;
+}
+
+/* alu datapath */
+#bus7 {
+  top: 16rem;
+  left: 45rem;
+  width: 10rem;
+  height: 0.5rem;
+}
+#bus8 {
+  top: 13rem;
+  left: 45rem;
+  width: 10rem;
+  height: 0.5rem;
+}
+
+/* alu registers */
+#bus9 {
+  top: 16rem;
+  left: 67rem;
+}
+
+/* alureg to memory */
+
+#bus10 {
+  top: 29rem;
+  left: 67rem;
+  height: 19rem;
+}
+
+#bus11 {
+  top: 16rem;
+  left: 49.5rem;
+  height: 32rem;
+}
+
+.pcir {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  padding: 2rem;
+}
+
+/*---------- BODY ----------*/
+
+/*---------- TABLES ----------*/
+/*----- basics -----*/
+table {
+  border-collapse: collapse;
+  /* border-bottom: 1px solid rgb(0, 0, 0, 0.2); */
+
+  border: 1px solid black;
+  width: 100%;
+
+  margin: 10px auto 20px auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 95%;
+}
+
+tr {
+  width: 20rem;
+  height: 3.78rem;
+}
+
+/*----- table data (a cell) -----*/
+td {
+  width: 20rem;
+  border-bottom: 1px solid black;
+  border: 1px solid rgb(0, 0, 0, 0.2);
+  /* max-width: 50%; */
+  height: 2rem;
+  text-align: center;
+}
+
+.custom-btn {
+    background-color: #fff;
+  width: 130px;
+  height: 40px;
+  color: #000;
+  border-radius: 5px;
+  padding: 10px 25px;
+  font-family: "Lato", sans-serif;
+  font-weight: 500;
+  /* background: transparent; */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  /* position: relative; */
+  /* display: inline-block; */
+  box-shadow:  6px 6px 12px #c3c3c3,
+             -6px -6px 12px #fdfdfd;
+
+  
+border: none;
+}
+
+#input_and_button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 3rem;
+  padding: 1rem;
+}
+
+#text_field{
+    height: 0.7rem;
+    width: 18rem;
+    margin: 1rem;
+    padding: 1rem;
+    border-radius: 10px;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: large;
+
+}

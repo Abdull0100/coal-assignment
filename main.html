@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="index.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="input_and_button">
+      <div id="input">
+        <input type="text" placeholder="instruction goes here" id="text_field"/>
+      </div>
+      <div id="button">
+        <button class="custom-btn btn-16">Execute</button>
+      </div>
+    </div>
+    <div class="databus" id="bus1"></div>
+    <div class="databus" id="bus2"></div>
+    <div class="databus" id="bus3"></div>
+    <div class="databus" id="bus4"></div>
+    <div class="databus" id="bus5"></div>
+    <div class="databus" id="bus6"></div>
+    <div class="databus" id="bus7"></div>
+    <div class="databus" id="bus8"></div>
+    <div class="databus" id="bus9"></div>
+    <div class="databus" id="bus10"></div>
+    <div class="databus" id="bus11"></div>
+    <div id="main">
+      <div id="cpu_memory">
+        <div id="cpu">
+          <div id="processor">
+            <div id="controller"></div>
+            <div class="pcir">
+              <div id="pc">
+                <div id="pc_inside">PC</div>
+              </div>
+              <div id="ir"></div>
+            </div>
+          </div>
+          <div id="datapath">
+            <div id="alu"></div>
+            <div id="alu_registers">
+              <div id="reg1"></div>
+              <div id="reg2"></div>
+            </div>
+          </div>
+        </div>
+        <div id="memory">
+          <div id="reg_layer_1" class="layers">
+            <div id="0h" class="memory_cell"></div>
+            <div id="1h" class="memory_cell"></div>
+            <div id="2h" class="memory_cell"></div>
+            <div id="3h" class="memory_cell"></div>
+            <div id="4h" class="memory_cell"></div>
+            <div id="5h" class="memory_cell"></div>
+            <div id="6h" class="memory_cell"></div>
+            <div id="7h" class="memory_cell"></div>
+          </div>
+          <div id="reg_layer_2" class="layers">
+            <div id="8h" class="memory_cell"></div>
+            <div id="9h" class="memory_cell"></div>
+            <div id="Ah" class="memory_cell"></div>
+            <div id="Bh" class="memory_cell"></div>
+            <div id="Ch" class="memory_cell"></div>
+            <div id="Dh" class="memory_cell"></div>
+            <div id="Eh" class="memory_cell"></div>
+            <div id="Fh" class="memory_cell"></div>
+          </div>
+        </div>
+      </div>
+      <div id="general_registers">
+        <!-- <div id="reg_layer1">
+          <div id="ah" class="register_cells"></div>
+          <div id="bh" class="register_cells"></div>
+          <div id="ch" class="register_cells"></div>
+          <div id="dh" class="register_cells"></div>
+        </div>
+        <div id="reg_layer2">
+          <div id="al" class="register_cells"></div>
+          <div id="bl" class="register_cells"></div>
+          <div id="cl" class="register_cells"></div>
+          <div id="dl" class="register_cells"></div>
+        </div> -->
+        <table>
+          <tr>
+            <td>AH</td>
+            <td>0</td>
+            <td>AL</td>
+            <td>0</td>
+          </tr>
+
+          <tr>
+            <td>BH</td>
+            <td>0</td>
+            <td>BL</td>
+            <td>0</td>
+          </tr>
+
+          <tr>
+            <td>CH</td>
+            <td>0</td>
+            <td>CL</td>
+            <td>0</td>
+          </tr>
+
+          <tr>
+            <td>DH</td>
+            <td>0</td>
+            <td>DL</td>
+            <td>0</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
