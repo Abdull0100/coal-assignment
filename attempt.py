@@ -49,6 +49,7 @@
 #    def gethigherstr(self):
 #        return ''.join(self.higher)
 #
+import copy
 
 class MachineCode():
 	#codes is for opcodes, dw and mode are self explanatory
@@ -154,8 +155,7 @@ class Processor():
     dividableregisters = {'ax':[AX,'000'], 'bx':[BX,'011'], 'cx':[CX,'001'], 'dx':[DX,'010']}
 
     #PI for pointer and index
-    PIregisters = {'ax':[AX,'000'], 'bx':[BX,'011'], 'cx':[CX,'001'], 'dx':[DX,'010'],
-                    'sp':[SP,'100'], 'bp':[BP,'101'], 'si':[SI,'110'], 'di':[DI,'111']}   
+    PIregisters = {'sp':[SP,'100'], 'bp':[BP,'101'], 'si':[SI,'110'], 'di':[DI,'111']}   
                 
     #lower and upper variants of registers AX,BX,CX,DX
     halfregisters = {'al':[AL,'000'], 'bl':[BL,'011'], 'cl':[CL,'001'], 'dl':[DL,'010'],
@@ -170,7 +170,7 @@ class Processor():
         inp1 = input("Enter the instruction: ").lower()
         if inp1 in self.opcodes.keys():
             if inp1 == "mov":
-                inp4 = input("Choose an addressing mode:\n\
+                mode = input("Choose an addressing mode:\n\
 1: Register to Register\n\
 2: Immediate to Register\n\
 3: Memory to Register\n\
@@ -179,7 +179,7 @@ class Processor():
                 inp2 = input("Enter the first operand: ").lower()
                 inp3 = input("Enter the second operand: ").lower()
 
-                if inp4 == "1":
+                if mode == "1":
                     #16-bit reg addressing
                     #AX,BX,CX,DX
                     if inp2 in self.dividableregisters and inp3 in self.dividableregisters:
@@ -202,15 +202,49 @@ class Processor():
                                     self.halfregisters[inp2][1], self.halfregisters[inp3][1])
                         x.display()
                 
-                if inp4 == "2":
+                if mode == "2":
                     #imm is only done for hex nums
                     if inp2 in self.dividableregisters and inp3.isalnum():
                         #extracts the hex number
-                        inp3 = list(str(hex(int(inp3)))[2:])
+                        hexnum = copy.deepcopy(inp3)
+                        hexnum = list(str(hex(int(hexnum)))[2:])
+                        #each case of the hex value moving into ax,bx,cx,dx
+                        if len(hexnum) == 4:
+                            self.dividableregisters[inp2][0].fset(self, hexnum)
                         
-                        if len(inp3) <= 6:
-                            self.dividableregisters[inp2][0].fset(self, inp3)
+                        elif len(hexnum) == 3:
+                            self.dividableregisters[inp2][0].fset(self, self.dividableregisters[inp2][0].fget(self)[0] + hexnum)
+                        
+                        elif len(hexnum) == 2:
+                            self.dividableregisters[inp2][0].fset(self, self.dividableregisters[inp2][0].fget(self)[0:2] + hexnum)
+                        
+                        elif len(hexnum) == 1:
+                            self.dividableregisters[inp2][0].fset(self, self.dividableregisters[inp2][0].fget(self)[0:3] + hexnum)
 
+                        else:
+                            print()
+                            print("Wrong immediate value")
+                    
+                    if inp2 in self.PIregisters and inp3.isalnum():
+                        #extracts the hex number
+                        hexnum = copy.deepcopy(inp3)
+                        hexnum = list(str(hex(int(hexnum)))[2:])
+                        #each case of the hex value moving into ax,bx,cx,dx
+                        if len(hexnum) == 4:
+                            self.PIregisters[inp2][0][0] = hexnum
+                        
+                        elif len(hexnum) == 3:
+                            self.PIregisters[inp2][0][0] = self.PIregisters[inp2][0][0][0] + hexnum
+                        
+                        elif len(hexnum) == 2:
+                            self.PIregisters[inp2][0][0] = self.PIregisters[inp2][0][0][0:2] + hexnum
+                        
+                        elif len(hexnum) == 1:
+                            self.PIregisters[inp2][0][0] = self.PIregisters[inp2][0][0][0:3] + hexnum
+
+                        else:
+                            print()
+                            print("Wrong immediate value")
 
 
                 
