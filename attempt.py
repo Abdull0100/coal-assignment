@@ -91,39 +91,39 @@ class Processor():
                "cmp": ['001110', #001110dw oorrrmmm disp (reg,reg/mem,reg/reg,mem)
                        '100000'] #100000sw oo111mmm disp data (reg,imm/mem,imm)     
               }
-    ax = [['0'] * 4]
+    ax = ['0'] * 4
     def __getax__(self):
         return self.AH[0] + self.AL[0]
     
     def __setax__(self, list1):
-        self.ax[0] = list1
+        self.ax = list1
         self.AL[0] = self.ax[0][2:4]
         self.AH[0] = self.ax[0][0:2]
 
-    bx = [['0'] * 4, '000']
+    bx = ['0'] * 4
     def __getbx__(self):
         return self.BH[0] + self.BL[0]
     
     def __setbx__(self, list1):
-        self.bx[0] = list1
+        self.bx = list1
         self.BL[0] = self.bx[0][2:4]
         self.BH[0] = self.bx[0][0:2]
     
-    cx = [['0'] * 4, '000']
+    cx = ['0'] * 4
     def __getcx__(self):
         return self.CH[0] + self.CL[0]
     
     def __setcx__(self, list1):
-        self.cx[0] = list1
+        self.cx = list1
         self.CL[0] = self.cx[0][2:4]
         self.CH[0] = self.cx[0][0:2]
     
-    dx = [['0'] * 4, '000']
+    dx = ['0'] * 4
     def __getdx__(self):
         return self.DH[0] + self.DL[0]
     
     def __setdx__(self, list1):
-        self.dx[0] = list1
+        self.dx = list1
         self.DL[0] = self.dx[0][2:4]
         self.DH[0] = self.dx[0][0:2]
 
@@ -153,14 +153,13 @@ class Processor():
 
     def procinput(self):
         inp1 = input("Enter the instruction: ").lower()
-        inp2 = input("Enter the first operand: ").lower()
-        inp3 = input("Enter the second operand: ").lower()
-
         if inp1 in self.opcodes.keys():
+            inp2 = input("Enter the first operand: ").lower()
+            inp3 = input("Enter the second operand: ").lower()
             if inp1 == "mov":
                 #16-bit reg addressing
                 if inp2 in self.fullregisters and inp3 in self.fullregisters:
-                    self.fullregisters[inp2][0] = self.fullregisters[inp3][0]
+                    self.fullregisters[inp2][0].fset(self, self.fullregisters[inp3][0].fget(self))
                     x = MachineCode('100010', '1', '1', '11',self.fullregisters[inp2][1], self.fullregisters[inp3][1])
                     x.display()
                
