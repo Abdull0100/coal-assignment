@@ -70,6 +70,7 @@ class MachineCode():
         print(f"MOD:{self.mode}")
         print(f"REG:{self.rrr}")
         print(f"R/M:{self.mmm}")
+
 class Processor():
     opcodes =       {"mov": ['100010', #100010dw oorrrmmm disp (reg,reg/mem,reg/reg,mem)
                        '1100011',#1100011w oo000mmm disp data (mem,imm)
@@ -92,39 +93,39 @@ class Processor():
               }
     ax = [['0'] * 4]
     def __getax__(self):
-        return Processor.AH[0] + Processor.AL[0]
+        return self.AH[0] + self.AL[0]
     
     def __setax__(self, list1):
-        Processor.ax[0] = list1
-        Processor.AL[0] = Processor.ax[0][2:4]
-        Processor.AH[0] = Processor.ax[0][0:2]
+        self.ax[0] = list1
+        self.AL[0] = self.ax[0][2:4]
+        self.AH[0] = self.ax[0][0:2]
 
     bx = [['0'] * 4, '000']
     def __getbx__(self):
-        return Processor.BH[0] + Processor.BL[0]
+        return self.BH[0] + self.BL[0]
     
     def __setbx__(self, list1):
-        Processor.bx[0] = list1
-        Processor.BL[0] = Processor.bx[0][2:4]
-        Processor.BH[0] = Processor.bx[0][0:2]
+        self.bx[0] = list1
+        self.BL[0] = self.bx[0][2:4]
+        self.BH[0] = self.bx[0][0:2]
     
     cx = [['0'] * 4, '000']
     def __getcx__(self):
-        return Processor.CH[0] + Processor.CL[0]
+        return self.CH[0] + self.CL[0]
     
     def __setcx__(self, list1):
-        Processor.cx[0] = list1
-        Processor.CL[0] = Processor.cx[0][2:4]
-        Processor.CH[0] = Processor.cx[0][0:2]
+        self.cx[0] = list1
+        self.CL[0] = self.cx[0][2:4]
+        self.CH[0] = self.cx[0][0:2]
     
     dx = [['0'] * 4, '000']
     def __getdx__(self):
-        return Processor.DH[0] + Processor.DL[0]
+        return self.DH[0] + self.DL[0]
     
     def __setdx__(self, list1):
-        Processor.dx[0] = list1
-        Processor.DL[0] = Processor.dx[0][2:4]
-        Processor.DH[0] = Processor.dx[0][0:2]
+        self.dx[0] = list1
+        self.DL[0] = self.dx[0][2:4]
+        self.DH[0] = self.dx[0][0:2]
 
         
     AX = property(fget=__getax__, fset=__setax__, fdel=None, doc=None)
@@ -155,18 +156,18 @@ class Processor():
         inp2 = input("Enter the first operand: ").lower()
         inp3 = input("Enter the second operand: ").lower()
 
-        if inp1 in Processor.opcodes.keys():
+        if inp1 in self.opcodes.keys():
             if inp1 == "mov":
                 #16-bit reg addressing
-                if inp2 in Processor.fullregisters and inp3 in Processor.fullregisters:
-                    Processor.fullregisters[inp2][0] = Processor.fullregisters[inp3][0]
-                    x = MachineCode('100010', '1', '1', '11',Processor.fullregisters[inp2][1], Processor.fullregisters[inp3][1])
+                if inp2 in self.fullregisters and inp3 in self.fullregisters:
+                    self.fullregisters[inp2][0] = self.fullregisters[inp3][0]
+                    x = MachineCode('100010', '1', '1', '11',self.fullregisters[inp2][1], self.fullregisters[inp3][1])
                     x.display()
                
                 #8-bit reg addressing
-                if inp2 in Processor.halfregisters and inp3 in Processor.halfregisters:
-                    Processor.halfregisters[inp2][0][0][::] = Processor.halfregisters[inp3][0][0][::]
-                    x = MachineCode('100010', '1', '0', '11',Processor.halfregisters[inp2][1], Processor.halfregisters[inp3][1])
+                if inp2 in self.halfregisters and inp3 in self.halfregisters:
+                    self.halfregisters[inp2][0][0][::] = self.halfregisters[inp3][0][0][::]
+                    x = MachineCode('100010', '1', '0', '11',self.halfregisters[inp2][1], self.halfregisters[inp3][1])
                     x.display()
 
 proc = Processor()
