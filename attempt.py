@@ -50,8 +50,6 @@
 #        return ''.join(self.higher)
 #
 
-
-
 class MachineCode():
 	#codes is for opcodes, dw and mode are self explanatory
     #all arguments are strings, easier to manipulate
@@ -92,28 +90,65 @@ class Processor():
                "cmp": ['001110', #001110dw oorrrmmm disp (reg,reg/mem,reg/reg,mem)
                        '100000'] #100000sw oo111mmm disp data (reg,imm/mem,imm)     
               }
-    AX = [['0'] * 4, '000']
-    CX = [['0'] * 4, '001']
-    DX = [['0'] * 4, '010']
-    BX = [['0'] * 4, '011']
+    ax = [['0'] * 4]
+    def __getax__(self):
+        return Processor.AH[0] + Processor.AL[0]
+    
+    def __setax__(self, list1):
+        Processor.ax[0] = list1
+        Processor.AL[0] = Processor.ax[0][2:4]
+        Processor.AH[0] = Processor.ax[0][0:2]
+
+    bx = [['0'] * 4, '000']
+    def __getbx__(self):
+        return Processor.BH[0] + Processor.BL[0]
+    
+    def __setbx__(self, list1):
+        Processor.bx[0] = list1
+        Processor.BL[0] = Processor.bx[0][2:4]
+        Processor.BH[0] = Processor.bx[0][0:2]
+    
+    cx = [['0'] * 4, '000']
+    def __getcx__(self):
+        return Processor.CH[0] + Processor.CL[0]
+    
+    def __setcx__(self, list1):
+        Processor.cx[0] = list1
+        Processor.CL[0] = Processor.cx[0][2:4]
+        Processor.CH[0] = Processor.cx[0][0:2]
+    
+    dx = [['0'] * 4, '000']
+    def __getdx__(self):
+        return Processor.DH[0] + Processor.DL[0]
+    
+    def __setdx__(self, list1):
+        Processor.dx[0] = list1
+        Processor.DL[0] = Processor.dx[0][2:4]
+        Processor.DH[0] = Processor.dx[0][0:2]
+
+        
+    AX = property(fget=__getax__, fset=__setax__, fdel=None, doc=None)
+    CX = property(fget=__getcx__, fset=__setcx__, fdel=None, doc=None)
+    DX = property(fget=__getdx__, fset=__setdx__, fdel=None, doc=None)
+    BX = property(fget=__getbx__, fset=__setbx__, fdel=None, doc=None)
     SP = [['0'] * 4, '100']
     BP = [['0'] * 4, '101']
     SI = [['0'] * 4, '110']
     DI = [['0'] * 4, '111']
 
-    AL = AX[0][2:4]
-    CL = CX[0][2:4]
-    DL = DX[0][2:4]
-    BL = BX[0][2:4]
+    AL = [ax[0][2:4], '000']
+    CL = [cx[0][2:4], '001']
+    DL = [dx[0][2:4], '010']
+    BL = [bx[0][2:4], '011']
 
-    AH = AX[0][0:2]
-    CH = CX[0][0:2]
-    DH = DX[0][0:2]
-    BH = BX[0][0:2]
+    AH = [ax[0][0:2], '100']
+    CH = [cx[0][0:2], '101']
+    DH = [dx[0][0:2], '110']
+    BH = [bx[0][0:2], '111']
 
 
-    fullregisters = {'ax':AX, 'bx':BX, 'cx':CX, 'dx':DX, 'sp':SP, 'bp':BP, 'si':SI, 'di':DI} #16-bit registers   
-    halfregisters = {'al':AL, 'bl':BL, 'cl':CL, 'dl':DL, 'ah':AH, 'bh':BH, 'ch':CH, 'dh':DH}
+    fullregisters = {'ax':[AX,'000'], 'bx':[BX,'011'], 'cx':[CX,'001'], 'dx':[DX,'010'], 'sp':[SP,'100'], 'bp':[BP,'101'], 'si':[SI,'110'], 'di':[DI,'111']} #16-bit registers   
+    halfregisters = {'al':[AL,'000'], 'bl':[BL,'011'], 'cl':[CL,'001'], 'dl':[DL,'010'], 'ah':[AH,'100'], 'bh':[BH,'101'], 'ch':[CH,'110'], 'dh':[DH,'111']} #8-bit registers
 
     def procinput(self):
         inp1 = input("Enter the instruction: ").lower()
@@ -124,21 +159,25 @@ class Processor():
             if inp1 == "mov":
                 #16-bit reg addressing
                 if inp2 in Processor.fullregisters and inp3 in Processor.fullregisters:
-                    Processor.fullregisters[inp2][0][::] = Processor.fullregisters[inp3][0][::]
+                    Processor.fullregisters[inp2][0] = Processor.fullregisters[inp3][0]
                     x = MachineCode('100010', '1', '1', '11',Processor.fullregisters[inp2][1], Processor.fullregisters[inp3][1])
                     x.display()
                
                 #8-bit reg addressing
                 if inp2 in Processor.halfregisters and inp3 in Processor.halfregisters:
-                    Processor.halfregisters[inp2][0][::] = Processor.halfregisters[inp3][0][::]
-
+                    Processor.halfregisters[inp2][0][0][::] = Processor.halfregisters[inp3][0][0][::]
+                    x = MachineCode('100010', '1', '0', '11',Processor.halfregisters[inp2][1], Processor.halfregisters[inp3][1])
+                    x.display()
 
 proc = Processor()
-
+proc.AX = ['1','2','3','4']
+proc.BX = ['5','6','7','8']
 proc.procinput()
 
-print(proc.AX[0])
-print(proc.BX[0])
+print(proc.AH)
+print(proc.BH)
+print(proc.AX)
+print(proc.BX)
 
 
 
