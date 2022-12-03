@@ -97,8 +97,8 @@ class Processor():
     
     def __setax__(self, list1):
         self.ax = list1
-        self.AL[0] = self.ax[0][2:4]
-        self.AH[0] = self.ax[0][0:2]
+        self.AL[0] = self.ax[2:4]
+        self.AH[0] = self.ax[0:2]
 
     bx = ['0'] * 4
     def __getbx__(self):
@@ -106,8 +106,8 @@ class Processor():
     
     def __setbx__(self, list1):
         self.bx = list1
-        self.BL[0] = self.bx[0][2:4]
-        self.BH[0] = self.bx[0][0:2]
+        self.BL[0] = self.bx[2:4]
+        self.BH[0] = self.bx[0:2]
     
     cx = ['0'] * 4
     def __getcx__(self):
@@ -115,8 +115,8 @@ class Processor():
     
     def __setcx__(self, list1):
         self.cx = list1
-        self.CL[0] = self.cx[0][2:4]
-        self.CH[0] = self.cx[0][0:2]
+        self.CL[0] = self.cx[2:4]
+        self.CH[0] = self.cx[0:2]
     
     dx = ['0'] * 4
     def __getdx__(self):
@@ -124,8 +124,8 @@ class Processor():
     
     def __setdx__(self, list1):
         self.dx = list1
-        self.DL[0] = self.dx[0][2:4]
-        self.DH[0] = self.dx[0][0:2]
+        self.DL[0] = self.dx[2:4]
+        self.DH[0] = self.dx[0:2]
 
         
     AX = property(fget=__getax__, fset=__setax__, fdel=None, doc=None)
@@ -137,15 +137,15 @@ class Processor():
     SI = [['0'] * 4, '110']
     DI = [['0'] * 4, '111']
 
-    AL = [ax[0][2:4], '000']
-    CL = [cx[0][2:4], '001']
-    DL = [dx[0][2:4], '010']
-    BL = [bx[0][2:4], '011']
+    AL = [ax[2:4], '000']
+    CL = [cx[2:4], '001']
+    DL = [dx[2:4], '010']
+    BL = [bx[2:4], '011']
 
-    AH = [ax[0][0:2], '100']
-    CH = [cx[0][0:2], '101']
-    DH = [dx[0][0:2], '110']
-    BH = [bx[0][0:2], '111']
+    AH = [ax[0:2], '100']
+    CH = [cx[0:2], '101']
+    DH = [dx[0:2], '110']
+    BH = [bx[0:2], '111']
 
 
     fullregisters = {'ax':[AX,'000'], 'bx':[BX,'011'], 'cx':[CX,'001'], 'dx':[DX,'010'], 'sp':[SP,'100'], 'bp':[BP,'101'], 'si':[SI,'110'], 'di':[DI,'111']} #16-bit registers   
@@ -174,10 +174,12 @@ proc.AX = ['1','2','3','4']
 proc.BX = ['5','6','7','8']
 proc.procinput()
 
-print(proc.AH)
-print(proc.BH)
 print(proc.AX)
 print(proc.BX)
+print(proc.AH)
+print(proc.AL)
+print(proc.BH)
+print(proc.BL)
 
 
 
