@@ -62,7 +62,8 @@ class MachineCode():
         self.mmm = mmm
 
     def display(self):
-        print(f"First Byte:{self.code}{self.d}{self.w}")
+        print("Machine code Generated: ")
+        print(f"First Byte:{self.code}{self.d}{self.w}", end=' ')
         print(f"Second Byte:{self.mode}{self.rrr}{self.mmm}")
         print(f"Opcode:{self.code}")
         print(f"D:{self.d}")
@@ -127,30 +128,44 @@ class Processor():
         self.DL[0] = self.dx[2:4]
         self.DH[0] = self.dx[0:2]
 
-        
+    #made dividable registers into properties so if AX changes, AH and AL change
+    #and vice versa
     AX = property(fget=__getax__, fset=__setax__, fdel=None, doc=None)
     CX = property(fget=__getcx__, fset=__setcx__, fdel=None, doc=None)
     DX = property(fget=__getdx__, fset=__setdx__, fdel=None, doc=None)
     BX = property(fget=__getbx__, fset=__setbx__, fdel=None, doc=None)
-    SP = [['0'] * 4, '100']
-    BP = [['0'] * 4, '101']
-    SI = [['0'] * 4, '110']
-    DI = [['0'] * 4, '111']
 
-    AL = [ax[2:4], '000']
-    CL = [cx[2:4], '001']
-    DL = [dx[2:4], '010']
-    BL = [bx[2:4], '011']
+    SP = ['0'] * 4
+    BP = ['0'] * 4
+    SI = ['0'] * 4
+    DI = ['0'] * 4
 
-    AH = [ax[0:2], '100']
-    CH = [cx[0:2], '101']
-    DH = [dx[0:2], '110']
-    BH = [bx[0:2], '111']
+    AL = ax[2:4]
+    CL = cx[2:4]
+    DL = dx[2:4]
+    BL = bx[2:4]
 
+    AH = ax[0:2]
+    CH = cx[0:2]
+    DH = dx[0:2]
+    BH = bx[0:2]
 
-    fullregisters = {'ax':[AX,'000'], 'bx':[BX,'011'], 'cx':[CX,'001'], 'dx':[DX,'010'], 'sp':[SP,'100'], 'bp':[BP,'101'], 'si':[SI,'110'], 'di':[DI,'111']} #16-bit registers   
-    halfregisters = {'al':[AL,'000'], 'bl':[BL,'011'], 'cl':[CL,'001'], 'dl':[DL,'010'], 'ah':[AH,'100'], 'bh':[BH,'101'], 'ch':[CH,'110'], 'dh':[DH,'111']} #8-bit registers
+    #registers that can be divided into 8-bit higher and lower variants
+    dividableregisters = {'ax':[AX,'000'], 'bx':[BX,'011'], 'cx':[CX,'001'], 'dx':[DX,'010']}
 
+    #PI for pointer and index
+    PIregisters = {'ax':[AX,'000'], 'bx':[BX,'011'], 'cx':[CX,'001'], 'dx':[DX,'010'],
+                    'sp':[SP,'100'], 'bp':[BP,'101'], 'si':[SI,'110'], 'di':[DI,'111']} #16-bit registers   
+                
+    #lower and upper variants of registers AX,BX,CX,DX
+    halfregisters = {'al':[AL,'000'], 'bl':[BL,'011'], 'cl':[CL,'001'], 'dl':[DL,'010'],
+                     'ah':[AH,'100'], 'bh':[BH,'101'], 'ch':[CH,'110'], 'dh':[DH,'111']} #8-bit registers
+                    
+    memory = ['00000', '00001', '00002', '00003', '00004', '00005', '00006',
+              '00007', '00008', '00009', '0000A', '0000B', '0000C', '0000D',
+              '0000E', '0000F']
+
+    #method for the processor to take instruction input from the user
     def procinput(self):
         inp1 = input("Enter the instruction: ").lower()
         if inp1 in self.opcodes.keys():
@@ -158,16 +173,38 @@ class Processor():
             inp3 = input("Enter the second operand: ").lower()
             if inp1 == "mov":
                 #16-bit reg addressing
-                if inp2 in self.fullregisters and inp3 in self.fullregisters:
-                    self.fullregisters[inp2][0].fset(self, self.fullregisters[inp3][0].fget(self))
-                    x = MachineCode('100010', '1', '1', '11',self.fullregisters[inp2][1], self.fullregisters[inp3][1])
+                #AX,BX,CX,DX
+                if inp2 in self.dividableregisters and inp3 in self.dividableregisters:
+                    self.dividableregisters[inp2][0].fset(self, self.dividableregisters[inp3][0].fget(self))
+                    x = MachineCode('100010', '1', '1', '11',
+                        self.dividableregisters[inp2][1], self.dividableregisters[inp3][1])
                     x.display()
+
+                #SP,BP,SI,DI
+                if inp2 in self.PIregisters and inp3 in self.PIregisters:
+                    self.PIregisters[inp2][0][0] = self.PIregisters[inp3][0][0]
+                    x = MachineCode('100010', '1', '1', '11',
+                        self.PIregisters[inp2][1], self.PIregisters[inp3][1])
                
                 #8-bit reg addressing
+                #AH,AL,BH,BL,CH,CL,DH,DL
                 if inp2 in self.halfregisters and inp3 in self.halfregisters:
-                    self.halfregisters[inp2][0][0][::] = self.halfregisters[inp3][0][0][::]
-                    x = MachineCode('100010', '1', '0', '11',self.halfregisters[inp2][1], self.halfregisters[inp3][1])
+                    self.halfregisters[inp2][0][0] = self.halfregisters[inp3][0][0]
+                    x = MachineCode('100010', '1', '0', '11',
+                                    self.halfregisters[inp2][1], self.halfregisters[inp3][1])
                     x.display()
+
+                if inp2 in self.dividableregisters and inp3.isdigit():
+                    inp3 = hex(int(inp3))
+                    #since hex is in the form "0x0000", the len of the greatest hex
+                    #that can be put into a 16-bit register is 6 
+                    if len(inp3) <= 6:
+                        
+
+
+
+                
+                
 
 proc = Processor()
 proc.AX = ['1','2','3','4']
