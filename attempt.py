@@ -253,8 +253,10 @@ class Processor():
 
     #method for the processor to take instruction input from the user
     def procinput(self):
-        while inp1 != 'exit':
+        while True:
             inp1 = input("Enter the instruction: ").lower()
+            if inp1 == 'exit':
+                break
             if inp1 in self.opcodes.keys():
                 if inp1 == "mov":
                     mode = input("Choose an addressing mode:\n\
@@ -267,50 +269,41 @@ class Processor():
                     inp3 = input("Enter the second operand: ").lower()
 
                     if mode == "1":
-                        #16-bit reg addressing
+                        #16-bit reg-reg addressing
                         #AX,BX,CX,DX,SP,BP,SI,DI
-                        if inp2 in self.fullregisters and inp3 in self.fullregisters:
+                        if inp2 in self.fullregisters.keys() and inp3 in self.fullregisters.keys():
                             self.fullregisters[inp2][0].fset(self, self.fullregisters[inp3][0].fget(self))
                             x = MachineCode('100010', '1', '1', '11',
                                 self.fullregisters[inp2][1], self.fullregisters[inp3][1])
                             x.display()
                        
-                        #8-bit reg addressing
+                        #8-bit reg-reg addressing
                         #AH,AL,BH,BL,CH,CL,DH,DL
-                        elif inp2 in self.halfregisters and inp3 in self.halfregisters:
+                        elif inp2 in self.halfregisters.keys() and inp3 in self.halfregisters.keys():
                             self.halfregisters[inp2][0].fset(self, self.halfregisters[inp3][0].fget(self))
                             x = MachineCode('100010', '1', '0', '11',
                                         self.halfregisters[inp2][1], self.halfregisters[inp3][1])
                             x.display()
                         else:
-                            print("Wrong operand input")
+                            print("Invalid instruction operands")
                             print()
 
                     elif mode == '2':
                         #imm is only done for hex nums
-                        if inp2 in self.dividableregisters and inp3.isalnum():
+                        #16-bit reg-imm addressing
+                        if inp2 in self.fullregisters.keys() and inp3.isalnum():
                             #extracts the hex number
                             hexnum = copy.deepcopy(inp3)
                             hexnum = list(str(hex(int(hexnum, base = 16)))[2:])
                             #each case of the hex value moving into ax,bx,cx,dx
                             if len(hexnum) <= 4:
-                                self.dividableregisters[inp2][0].fset(self, hexnum)
+                                self.fullregisters[inp2][0].fset(self, hexnum)
                             else:
-                                print("Wrong immediate value")
+                                print("Invalid sized value")
                                 print()
-                    
-                        elif inp2 in self.PIregisters and inp3.isalnum():
-                            #extracts the hex number
-                            hexnum = copy.deepcopy(inp3)
-                            hexnum = list(str(hex(int(hexnum, base = 16)))[2:])
-                            #each case of the hex value moving into sp,bp,si,di
-                            if len(hexnum) <= 4:
-                                self.PIregisters[inp2][0].fset(self,hexnum)
-                            else:
-                                print("Wrong immediate value")
-                                print()
-                    
-                        elif inp2 in self.halfregisters and inp3.isalnum():
+
+                        #8-bit reg-imm addressing
+                        elif inp2 in self.halfregisters.keys() and inp3.isalnum():
                             #extracts the hex number
                             hexnum = copy.deepcopy(inp3)
                             hexnum = list(str(hex(int(hexnum, base = 16)))[2:])
@@ -318,24 +311,46 @@ class Processor():
                             if len(hexnum) <= 2:
                                 self.halfregisters[inp2][0].fset(self,hexnum)
                             else:
-                                print("Wrong immediate value")
+                                print("Invalid sized value")
                                 print()
                         else:
-                            print("Wrong operand values")
+                            print("Invalid instruction operands")
                             print()
                     elif mode == '3':
-                    
-            if inp1 == "exit":
-                break
+                        #16-bit reg-mem addressing
+                        if inp2 in self.fullregisters.keys() and inp3[1] in self.memory.keys():
+                            self.fullregisters[inp2][0].fset(self, list(self.memory[inp3[1]]))
+                        #8-bit reg-mem addressing
+                        elif inp2 in self.halfregisters.keys() and inp3[1] in self.memory.keys():
+                            self.halfregisters[inp2][0].fset(self, list(self.memory[inp3[1]]))
+                        
+                        else:
+                            print("Invalid instruction operands")
+                            print()
 
+                    elif mode == '4':
+                    #16-bit mem-reg addressing
+                        if inp2[1] in self.memory.keys() and inp3 in self.fullregisters.keys():
+                            self.memory[inp2[1]] = ''.join(self.fullregisters[inp3][0].fget(self))
+                        
+                        #8-bit mem-reg addressing
+                        elif inp2[1] in self.memory.keys() and inp3 in self.halfregisters.keys():
+                            self.memory[inp2[1]] = ''.join(self.halfregisters[inp3][0].fget(self))
+                       
+                        else:
+                            print("Invalid instruction operands")
+                            print()
+                    else:
+                        print("Invalid mode input")
+                        print()
+            
 
-                
-                
 
 proc = Processor()
 
 proc.procinput()
 print(proc.AX)
+print(proc.memory['0'])
 print(proc.SP)
 print(proc.AH)
 print(proc.AL)
