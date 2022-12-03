@@ -1,54 +1,3 @@
-#class GeneralRegister():
-#    def __init__(self, name, value, regcode): #value should be taken as string
-#        self.name = name
-#        self.value = value
-#        self.regcode = regcode
-#    
-#    def getvalue(self): #getter function for contents (string)
-#        return self.value
-#    
-#    def getregcode(self): #getter function for register code (string)
-#        return self.code
-#
-#    def __str__(self) -> str: #prints out name and value
-#        return f"{self.name} = {self.value}"
-#
-#class LowerRegister(GeneralRegister):
-#    def __init__(self, name, value, regcode):
-#        super().__init__(name, value, regcode)
-#        #self.name = name
-#        #self.value = value
-#        #self.regcode = regcode
-#
-#class HigherRegister(GeneralRegister):
-#    def __init__(self, name, value, regcode):
-#        super().__init__(name, value, regcode)
-#        #self.name = name
-#        #self.value = value
-#        #self.regcode = regcode
-#
-#class DividableRegister(GeneralRegister):
-#    #constructor for dividable 16-bit registers (ax,bx,cx,dx)
-#    def __init__(self, name, value, regcode):
-#        super().__init__(name, value, regcode)
-#        self.lower = LowerRegister(self.name[0]+'L', self.value[2:4], self.regcode)
-#        self.higher = HigherRegister(self.name[0]+'H', self.value[0:2], '1' + self.regcode[1:3])
-#        #self.value = self.higher.value + self.lower.value
-#    
-#    #sets the values of lower and higher after operations on 16-bit register
-#    def update(self):
-#        self.value = self.higher.value + self.lower.value
-#        self.lower = LowerRegister(self.name[0]+'L', self.value[2:4], self.regcode)
-#        self.higher = HigherRegister(self.name[0]+'H', self.value[0:2], self.regcode)
-#
-#    #getter function for lower 8-bits of register as string
-#    def getlowerstr(self):
-#        return ''.join(self.lower)
-#    
-#    #getter function for higher 8-bits of register as string
-#    def gethigherstr(self):
-#        return ''.join(self.higher)
-#
 import copy
 
 class MachineCode():
@@ -98,7 +47,12 @@ class Processor():
         return self.AH + self.AL
     
     def __setax__(self, list1):
-        self.ax = list1
+        if len(list1) <= 4:
+            for i in range(len(self.ax)-1, len(self.ax) - len(list1) - 1, -1):
+                self.ax[i] = list1[i-(len(self.ax) - len(list1))]
+        else:
+            print("Wrong setter to register")
+
         self.AL = self.ax[2:4]
         self.AH = self.ax[0:2]
 
@@ -107,7 +61,12 @@ class Processor():
         return self.BH + self.BL
     
     def __setbx__(self, list1):
-        self.bx = list1
+        if len(list1) <= 4:
+            for i in range(len(self.bx)-1, len(self.bx) - len(list1) - 1, -1):
+                self.bx[i] = list1[i-(len(self.bx) - len(list1))]
+        else:
+            print("Wrong setter to register")
+
         self.BL = self.bx[2:4]
         self.BH = self.bx[0:2]
     
@@ -116,7 +75,12 @@ class Processor():
         return self.CH + self.CL
     
     def __setcx__(self, list1):
-        self.cx = list1
+        if len(list1) <= 4:
+            for i in range(len(self.cx)-1, len(self.cx) - len(list1) - 1, -1):
+                self.cx[i] = list1[i-(len(self.cx) - len(list1))]
+        else:
+            print("Wrong setter to register")
+
         self.CL = self.cx[2:4]
         self.CH = self.cx[0:2]
     
@@ -125,31 +89,156 @@ class Processor():
         return self.DH + self.DL
     
     def __setdx__(self, list1):
-        self.dx = list1
+        if len(list1) <= 4:
+            for i in range(len(self.dx)-1, len(self.dx) - len(list1) - 1, -1):
+                self.dx[i] = list1[i-(len(self.dx) - len(list1))]
+        else:
+            print("Wrong setter to register")
+
         self.DL = self.dx[2:4]
         self.DH = self.dx[0:2]
 
-    #made dividable registers into properties so if AX changes, AH and AL change
-    #and vice versa
+    sp = ['0'] * 4
+    def __getsp__(self):
+        return self.sp
+    def __setsp__(self, list1):
+        if len(list1) <= 4:
+            for i in range(len(self.sp)-1, len(self.sp) - len(list1) - 1, -1):
+                self.sp[i] = list1[i-(len(self.sp) - len(list1))]
+        else:
+            print("Wrong setter to register")
+
+    bp = ['0'] * 4
+    def __getbp__(self):
+        return self.bp
+    def __setbp__(self, list1):
+        if len(list1) <= 4:
+            for i in range(len(self.bp)-1, len(self.bp) - len(list1) - 1, -1):
+                self.bp[i] = list1[i-(len(self.bp) - len(list1))]
+        else:
+            print("Wrong setter to register")
+
+    si = ['0'] * 4
+    def __getsi__(self):
+        return self.sp
+    def __setsi__(self, list1):
+        if len(list1) <= 4:
+            for i in range(len(self.si)-1, len(self.si) - len(list1) - 1, -1):
+                self.si[i] = list1[i-(len(self.si) - len(list1))]
+        else:
+            print("Wrong setter to register")
+    
+    di = ['0'] * 4
+    def __getdi__(self):
+        return self.di
+    def __setdi__(self, list1):
+        if len(list1) <= 4:
+            for i in range(len(self.di)-1, len(self.di) - len(list1) - 1, -1):
+                self.di[i] = list1[i-(len(self.di) - len(list1))]
+        else:
+            print("Wrong setter to register")
+    
+    al = ax[2:4]
+    def __getal__(self):
+        return self.al
+    def __setal__(self, list1):
+        if len(list1) <= 4:
+            for i in range(len(self.al)-1, len(self.al) - len(list1) - 1, -1):
+                self.al[i] = list1[i-(len(self.al) - len(list1))]
+        else:
+            print("Wrong setter to register")
+
+    bl = bx[2:4]
+    def __getbl__(self):
+        return self.bl
+    def __setbl__(self, list1):
+        if len(list1) <= 4:
+            for i in range(len(self.bl)-1, len(self.bl) - len(list1) - 1, -1):
+                self.bl[i] = list1[i-(len(self.bl) - len(list1))]
+        else:
+            print("Wrong setter to register")
+
+    cl = cx[2:4]
+    def __getcl__(self):
+        return self.cl
+    def __setcl__(self, list1):
+        if len(list1) <= 4:
+            for i in range(len(self.cl)-1, len(self.cl) - len(list1) - 1, -1):
+                self.cl[i] = list1[i-(len(self.cl) - len(list1))]
+        else:
+            print("Wrong setter to register")
+
+    dl = dx[2:4]
+    def __getdl__(self):
+        return self.dl
+    def __setdl__(self, list1):
+        if len(list1) <= 4:
+            for i in range(len(self.dl)-1, len(self.dl) - len(list1) - 1, -1):
+                self.dl[i] = list1[i-(len(self.dl) - len(list1))]
+        else:
+            print("Wrong setter to register")
+
+    ah = ax[0:2]
+    def __getah__(self):
+        return self.ah
+    def __setah__(self, list1):
+        if len(list1) <= 4:
+            for i in range(len(self.ah)-1, len(self.ah) - len(list1) - 1, -1):
+                self.ah[i] = list1[i-(len(self.ah) - len(list1))]
+        else:
+            print("Wrong setter to register")
+    
+    bh = bx[0:2]
+    def __getbh__(self):
+        return self.bh
+    def __setbh__(self, list1):
+        if len(list1) <= 4:
+            for i in range(len(self.bh)-1, len(self.bh) - len(list1) - 1, -1):
+                self.bh[i] = list1[i-(len(self.bh) - len(list1))]
+        else:
+            print("Wrong setter to register")
+
+    ch = cx[0:2]
+    def __getch__(self):
+        return self.ch
+    def __setch__(self, list1):
+        if len(list1) <= 4:
+            for i in range(len(self.ch)-1, len(self.ch) - len(list1) - 1, -1):
+                self.ch[i] = list1[i-(len(self.ch) - len(list1))]
+        else:
+            print("Wrong setter to register")
+    
+    dh = dx[0:2]
+    def __getdh__(self):
+        return self.dh
+    def __setdh__(self, list1):
+        if len(list1) <= 4:
+            for i in range(len(self.dh)-1, len(self.dh) - len(list1) - 1, -1):
+                self.dh[i] = list1[i-(len(self.dh) - len(list1))]
+        else:
+            print("Wrong setter to register")
+
+    #made registers into properties for easy access
+
     AX = property(fget=__getax__, fset=__setax__, fdel=None, doc=None)
     CX = property(fget=__getcx__, fset=__setcx__, fdel=None, doc=None)
     DX = property(fget=__getdx__, fset=__setdx__, fdel=None, doc=None)
     BX = property(fget=__getbx__, fset=__setbx__, fdel=None, doc=None)
 
-    SP = ['0'] * 4
-    BP = ['0'] * 4
-    SI = ['0'] * 4
-    DI = ['0'] * 4
+    SP = property(fget=__getsp__, fset=__setsp__, fdel=None, doc=None)
+    BP = property(fget=__getbp__, fset=__setbp__, fdel=None, doc=None)
+    SI = property(fget=__getsi__, fset=__setsi__, fdel=None, doc=None)
+    DI = property(fget=__getdi__, fset=__setdi__, fdel=None, doc=None)
 
-    AL = ax[2:4]
-    CL = cx[2:4]
-    DL = dx[2:4]
-    BL = bx[2:4]
+    AL = property(fget=__getal__, fset=__setal__, fdel=None, doc=None)
+    CL = property(fget=__getcl__, fset=__setcl__, fdel=None, doc=None)
+    DL = property(fget=__getdl__, fset=__setdl__, fdel=None, doc=None)
+    BL = property(fget=__getbl__, fset=__setbl__, fdel=None, doc=None)
 
-    AH = ax[0:2]
-    CH = cx[0:2]
-    DH = dx[0:2]
-    BH = bx[0:2]
+    AH = property(fget=__getah__, fset=__setah__, fdel=None, doc=None)
+    CH = property(fget=__getch__, fset=__setch__, fdel=None, doc=None)
+    DH = property(fget=__getdh__, fset=__setdh__, fdel=None, doc=None)
+    BH = property(fget=__getbh__, fset=__setbh__, fdel=None, doc=None)
 
     #registers that can be divided into 8-bit higher and lower variants
     dividableregisters = {'ax':[AX,'000'], 'bx':[BX,'011'], 'cx':[CX,'001'], 'dx':[DX,'010']}
@@ -167,100 +256,99 @@ class Processor():
 
     #method for the processor to take instruction input from the user
     def procinput(self):
-        inp1 = input("Enter the instruction: ").lower()
-        if inp1 in self.opcodes.keys():
-            if inp1 == "mov":
-                mode = input("Choose an addressing mode:\n\
+        while inp1 != 'exit':
+            inp1 = input("Enter the instruction: ").lower()
+            if inp1 in self.opcodes.keys():
+                if inp1 == "mov":
+                    mode = input("Choose an addressing mode:\n\
 1: Register to Register\n\
 2: Immediate to Register\n\
 3: Memory to Register\n\
 4: Register to Memory\n")
 
-                inp2 = input("Enter the first operand: ").lower()
-                inp3 = input("Enter the second operand: ").lower()
+                    inp2 = input("Enter the first operand: ").lower()
+                    inp3 = input("Enter the second operand: ").lower()
 
-                if mode == "1":
-                    #16-bit reg addressing
-                    #AX,BX,CX,DX
-                    if inp2 in self.dividableregisters and inp3 in self.dividableregisters:
-                        self.dividableregisters[inp2][0].fset(self, self.dividableregisters[inp3][0].fget(self))
-                        x = MachineCode('100010', '1', '1', '11',
-                            self.dividableregisters[inp2][1], self.dividableregisters[inp3][1])
-                        x.display()
-
-                    #SP,BP,SI,DI
-                    if inp2 in self.PIregisters and inp3 in self.PIregisters:
-                        self.PIregisters[inp2][0][0] = self.PIregisters[inp3][0][0]
-                        x = MachineCode('100010', '1', '1', '11',
-                            self.PIregisters[inp2][1], self.PIregisters[inp3][1])
-               
-                    #8-bit reg addressing
-                    #AH,AL,BH,BL,CH,CL,DH,DL
-                    if inp2 in self.halfregisters and inp3 in self.halfregisters:
-                        self.halfregisters[inp2][0][0] = self.halfregisters[inp3][0][0]
-                        x = MachineCode('100010', '1', '0', '11',
-                                    self.halfregisters[inp2][1], self.halfregisters[inp3][1])
-                        x.display()
-                
-                if mode == "2":
-                    #imm is only done for hex nums
-                    if inp2 in self.dividableregisters and inp3.isalnum():
-                        #extracts the hex number
-                        hexnum = copy.deepcopy(inp3)
-                        hexnum = list(str(hex(int(hexnum)))[2:])
-                        #each case of the hex value moving into ax,bx,cx,dx
-                        if len(hexnum) == 4:
-                            self.dividableregisters[inp2][0].fset(self, hexnum)
-                        
-                        elif len(hexnum) == 3:
-                            self.dividableregisters[inp2][0].fset(self, self.dividableregisters[inp2][0].fget(self)[0] + hexnum)
-                        
-                        elif len(hexnum) == 2:
-                            self.dividableregisters[inp2][0].fset(self, self.dividableregisters[inp2][0].fget(self)[0:2] + hexnum)
-                        
-                        elif len(hexnum) == 1:
-                            self.dividableregisters[inp2][0].fset(self, self.dividableregisters[inp2][0].fget(self)[0:3] + hexnum)
-
+                    if mode == "1":
+                        #16-bit reg addressing
+                        #AX,BX,CX,DX
+                        if inp2 in self.dividableregisters and inp3 in self.dividableregisters:
+                            self.dividableregisters[inp2][0].fset(self, self.dividableregisters[inp3][0].fget(self))
+                            x = MachineCode('100010', '1', '1', '11',
+                                self.dividableregisters[inp2][1], self.dividableregisters[inp3][1])
+                            x.display()
+                        #SP,BP,SI,DI
+                        elif inp2 in self.PIregisters and inp3 in self.PIregisters:
+                            self.PIregisters[inp2][0].fset(self, self.PIregisters[inp3][0].fget(self))
+                            x = MachineCode('100010', '1', '1', '11',
+                                self.PIregisters[inp2][1], self.PIregisters[inp3][1])
+                            x.display()
+                        #8-bit reg addressing
+                        #AH,AL,BH,BL,CH,CL,DH,DL
+                        elif inp2 in self.halfregisters and inp3 in self.halfregisters:
+                            self.halfregisters[inp2][0].fset(self, self.halfregisters[inp3][0].fget(self))
+                            x = MachineCode('100010', '1', '0', '11',
+                                        self.halfregisters[inp2][1], self.halfregisters[inp3][1])
+                            x.display()
                         else:
+                            print("Wrong operand input")
                             print()
-                            print("Wrong immediate value")
+
+                    elif mode == '2':
+                        #imm is only done for hex nums
+                        if inp2 in self.dividableregisters and inp3.isalnum():
+                            #extracts the hex number
+                            hexnum = copy.deepcopy(inp3)
+                            hexnum = list(str(hex(int(hexnum, base = 16)))[2:])
+                            #each case of the hex value moving into ax,bx,cx,dx
+                            if len(hexnum) <= 4:
+                                self.dividableregisters[inp2][0].fset(self, hexnum)
+                            else:
+                                print("Wrong immediate value")
+                                print()
                     
-                    if inp2 in self.PIregisters and inp3.isalnum():
-                        #extracts the hex number
-                        hexnum = copy.deepcopy(inp3)
-                        hexnum = list(str(hex(int(hexnum)))[2:])
-                        #each case of the hex value moving into ax,bx,cx,dx
-                        if len(hexnum) == 4:
-                            self.PIregisters[inp2][0][0] = hexnum
-                        
-                        elif len(hexnum) == 3:
-                            self.PIregisters[inp2][0][0] = self.PIregisters[inp2][0][0][0] + hexnum
-                        
-                        elif len(hexnum) == 2:
-                            self.PIregisters[inp2][0][0] = self.PIregisters[inp2][0][0][0:2] + hexnum
-                        
-                        elif len(hexnum) == 1:
-                            self.PIregisters[inp2][0][0] = self.PIregisters[inp2][0][0][0:3] + hexnum
-
+                        elif inp2 in self.PIregisters and inp3.isalnum():
+                            #extracts the hex number
+                            hexnum = copy.deepcopy(inp3)
+                            hexnum = list(str(hex(int(hexnum, base = 16)))[2:])
+                            #each case of the hex value moving into sp,bp,si,di
+                            if len(hexnum) <= 4:
+                                self.PIregisters[inp2][0].fset(self,hexnum)
+                            else:
+                                print("Wrong immediate value")
+                                print()
+                    
+                        elif inp2 in self.halfregisters and inp3.isalnum():
+                            #extracts the hex number
+                            hexnum = copy.deepcopy(inp3)
+                            hexnum = list(str(hex(int(hexnum, base = 16)))[2:])
+                            #each case of the hex value moving into lower and higher registers                        
+                            if len(hexnum) <= 2:
+                                self.halfregisters[inp2][0].fset(self,hexnum)
+                            else:
+                                print("Wrong immediate value")
+                                print()
                         else:
+                            print("Wrong operand values")
                             print()
-                            print("Wrong immediate value")
+                    elif mode == '3':
+                        
+                    
+            if inp1 == "exit":
+                break
 
 
                 
                 
 
 proc = Processor()
-proc.AX = ['1','2','3','4']
-proc.BX = ['5','6','7','8']
-proc.procinput()
 
+proc.procinput()
 print(proc.AX)
-print(proc.BX)
+print(proc.SP)
 print(proc.AH)
 print(proc.AL)
-print(proc.BH)
-print(proc.BL)
+
 
 
 
