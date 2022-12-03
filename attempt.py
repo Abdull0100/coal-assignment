@@ -240,19 +240,16 @@ class Processor():
     DH = property(fget=__getdh__, fset=__setdh__, fdel=None, doc=None)
     BH = property(fget=__getbh__, fset=__setbh__, fdel=None, doc=None)
 
-    #registers that can be divided into 8-bit higher and lower variants
-    dividableregisters = {'ax':[AX,'000'], 'bx':[BX,'011'], 'cx':[CX,'001'], 'dx':[DX,'010']}
-
-    #PI for pointer and index
-    PIregisters = {'sp':[SP,'100'], 'bp':[BP,'101'], 'si':[SI,'110'], 'di':[DI,'111']}   
-                
+    #registers AX,BX,CX,DX,SP,BP,SI,DI 
+    fullregisters = {'ax':[AX,'000'], 'bx':[BX,'011'], 'cx':[CX,'001'], 'dx':[DX,'010'],
+                    'sp':[SP,'100'], 'bp':[BP,'101'], 'si':[SI,'110'], 'di':[DI,'111']}
     #lower and upper variants of registers AX,BX,CX,DX
     halfregisters = {'al':[AL,'000'], 'bl':[BL,'011'], 'cl':[CL,'001'], 'dl':[DL,'010'],
                      'ah':[AH,'100'], 'bh':[BH,'101'], 'ch':[CH,'110'], 'dh':[DH,'111']}
                     
-    memory = ['00000', '00001', '00002', '00003', '00004', '00005', '00006',
-              '00007', '00008', '00009', '0000A', '0000B', '0000C', '0000D',
-              '0000E', '0000F']
+    memory = {'0':'1234', '1':'0000', '2':'0002', '3':'0000', '4':'0000', '5':'0000', '6':'0000',
+              '7':'0000', '8':'0000', '9':'0000', 'A':'0000', 'B':'0000', 'C':'0000', 'D':'0000',
+              'E':'0000', 'F':'0000'}
 
     #method for the processor to take instruction input from the user
     def procinput(self):
@@ -271,18 +268,13 @@ class Processor():
 
                     if mode == "1":
                         #16-bit reg addressing
-                        #AX,BX,CX,DX
-                        if inp2 in self.dividableregisters and inp3 in self.dividableregisters:
-                            self.dividableregisters[inp2][0].fset(self, self.dividableregisters[inp3][0].fget(self))
+                        #AX,BX,CX,DX,SP,BP,SI,DI
+                        if inp2 in self.fullregisters and inp3 in self.fullregisters:
+                            self.fullregisters[inp2][0].fset(self, self.fullregisters[inp3][0].fget(self))
                             x = MachineCode('100010', '1', '1', '11',
-                                self.dividableregisters[inp2][1], self.dividableregisters[inp3][1])
+                                self.fullregisters[inp2][1], self.fullregisters[inp3][1])
                             x.display()
-                        #SP,BP,SI,DI
-                        elif inp2 in self.PIregisters and inp3 in self.PIregisters:
-                            self.PIregisters[inp2][0].fset(self, self.PIregisters[inp3][0].fget(self))
-                            x = MachineCode('100010', '1', '1', '11',
-                                self.PIregisters[inp2][1], self.PIregisters[inp3][1])
-                            x.display()
+                       
                         #8-bit reg addressing
                         #AH,AL,BH,BL,CH,CL,DH,DL
                         elif inp2 in self.halfregisters and inp3 in self.halfregisters:
@@ -332,7 +324,6 @@ class Processor():
                             print("Wrong operand values")
                             print()
                     elif mode == '3':
-                        
                     
             if inp1 == "exit":
                 break
@@ -348,8 +339,4 @@ print(proc.AX)
 print(proc.SP)
 print(proc.AH)
 print(proc.AL)
-
-
-
-
 
