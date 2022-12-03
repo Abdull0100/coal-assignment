@@ -3,9 +3,21 @@ let instruction;
 
 let opCodes = ["mov","add","sub","div","inc","dec"];
 let generalRegisters= ["ah","al","bh","bl","ch","cl","dh","dl"];
+let generalValues = ["0","0","0","0","0","0","0","0"];
 let memoryPlaces = ["[0h]","[1h]","[2h]","[3h]","[4h]","[5h]","[6h]","[7h]","[8h]","[9h]","[ah]","[bh]","[ch]","[dh]","[eh]","[fh]"]
+let memoryValues = ["0","0","0","0","0","0","0","0","0","0","0","0","0","0","0","0"];
 
 
+
+function all_value_initial() {
+    for (let i = 0; i < 16; i++) {
+        document.getElementById(`name${i}`).innerHTML = memoryPlaces[i].toUpperCase();
+        document.getElementById(`value${i}`).innerHTML = memoryValues[i];
+    }
+}
+
+
+all_value_initial();
 
 function validater(instruction){
     let flag_op = false;
@@ -26,7 +38,6 @@ function validater(instruction){
     console.log(flag_source);
 
     if(flag_op==false || flag_dest==false || flag_source==false){
-        // alert("YOUR MOTHER HUNG HERSELF");
         document.getElementById("text_field").value = "Invalid Instruction";
     }
 }
@@ -43,6 +54,7 @@ function execute_button(){
     instruction = cleaner_tokenizer(instruction);
     console.log(instruction);
     validater(instruction);
+    
 }
 
 

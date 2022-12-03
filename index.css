@@ -69,10 +69,13 @@
 }
 
 .memory_cell {
+  
   height: 3rem;
   width: 5rem;
   border: 1px solid black;
   margin: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
 #reg_layer1 {
@@ -229,8 +232,8 @@
 
 /* pc controller */
 #bus1 {
-  top: 16rem;
-  left: 11rem;
+  top: 27vh;
+  left: 9vw;
   background-color: black;
 }
 #bus2 {
@@ -379,4 +382,19 @@ border: none;
     font-weight: 700;
     font-size: large;
 
+}
+
+.names{
+  text-align: center;
+  height: 1.5rem;
+  width: 100%;
+  border: 1px solid black;
+  font-weight: bolder;
+}
+
+.values{
+  text-align: center;
+  height: 1.5rem;
+  width: 100%;
+  border: 1px solid black;
 }
