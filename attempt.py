@@ -94,39 +94,39 @@ class Processor():
               }
     ax = ['0'] * 4
     def __getax__(self):
-        return self.AH[0] + self.AL[0]
+        return self.AH + self.AL
     
     def __setax__(self, list1):
         self.ax = list1
-        self.AL[0] = self.ax[2:4]
-        self.AH[0] = self.ax[0:2]
+        self.AL = self.ax[2:4]
+        self.AH = self.ax[0:2]
 
     bx = ['0'] * 4
     def __getbx__(self):
-        return self.BH[0] + self.BL[0]
+        return self.BH + self.BL
     
     def __setbx__(self, list1):
         self.bx = list1
-        self.BL[0] = self.bx[2:4]
-        self.BH[0] = self.bx[0:2]
+        self.BL = self.bx[2:4]
+        self.BH = self.bx[0:2]
     
     cx = ['0'] * 4
     def __getcx__(self):
-        return self.CH[0] + self.CL[0]
+        return self.CH + self.CL
     
     def __setcx__(self, list1):
         self.cx = list1
-        self.CL[0] = self.cx[2:4]
-        self.CH[0] = self.cx[0:2]
+        self.CL = self.cx[2:4]
+        self.CH = self.cx[0:2]
     
     dx = ['0'] * 4
     def __getdx__(self):
-        return self.DH[0] + self.DL[0]
+        return self.DH + self.DL
     
     def __setdx__(self, list1):
         self.dx = list1
-        self.DL[0] = self.dx[2:4]
-        self.DH[0] = self.dx[0:2]
+        self.DL = self.dx[2:4]
+        self.DH = self.dx[0:2]
 
     #made dividable registers into properties so if AX changes, AH and AL change
     #and vice versa
@@ -155,11 +155,11 @@ class Processor():
 
     #PI for pointer and index
     PIregisters = {'ax':[AX,'000'], 'bx':[BX,'011'], 'cx':[CX,'001'], 'dx':[DX,'010'],
-                    'sp':[SP,'100'], 'bp':[BP,'101'], 'si':[SI,'110'], 'di':[DI,'111']} #16-bit registers   
+                    'sp':[SP,'100'], 'bp':[BP,'101'], 'si':[SI,'110'], 'di':[DI,'111']}   
                 
     #lower and upper variants of registers AX,BX,CX,DX
     halfregisters = {'al':[AL,'000'], 'bl':[BL,'011'], 'cl':[CL,'001'], 'dl':[DL,'010'],
-                     'ah':[AH,'100'], 'bh':[BH,'101'], 'ch':[CH,'110'], 'dh':[DH,'111']} #8-bit registers
+                     'ah':[AH,'100'], 'bh':[BH,'101'], 'ch':[CH,'110'], 'dh':[DH,'111']}
                     
     memory = ['00000', '00001', '00002', '00003', '00004', '00005', '00006',
               '00007', '00008', '00009', '0000A', '0000B', '0000C', '0000D',
@@ -169,37 +169,47 @@ class Processor():
     def procinput(self):
         inp1 = input("Enter the instruction: ").lower()
         if inp1 in self.opcodes.keys():
-            inp2 = input("Enter the first operand: ").lower()
-            inp3 = input("Enter the second operand: ").lower()
             if inp1 == "mov":
-                #16-bit reg addressing
-                #AX,BX,CX,DX
-                if inp2 in self.dividableregisters and inp3 in self.dividableregisters:
-                    self.dividableregisters[inp2][0].fset(self, self.dividableregisters[inp3][0].fget(self))
-                    x = MachineCode('100010', '1', '1', '11',
-                        self.dividableregisters[inp2][1], self.dividableregisters[inp3][1])
-                    x.display()
+                inp4 = input("Choose an addressing mode:\n\
+1: Register to Register\n\
+2: Immediate to Register\n\
+3: Memory to Register\n\
+4: Register to Memory\n")
 
-                #SP,BP,SI,DI
-                if inp2 in self.PIregisters and inp3 in self.PIregisters:
-                    self.PIregisters[inp2][0][0] = self.PIregisters[inp3][0][0]
-                    x = MachineCode('100010', '1', '1', '11',
-                        self.PIregisters[inp2][1], self.PIregisters[inp3][1])
+                inp2 = input("Enter the first operand: ").lower()
+                inp3 = input("Enter the second operand: ").lower()
+
+                if inp4 == "1":
+                    #16-bit reg addressing
+                    #AX,BX,CX,DX
+                    if inp2 in self.dividableregisters and inp3 in self.dividableregisters:
+                        self.dividableregisters[inp2][0].fset(self, self.dividableregisters[inp3][0].fget(self))
+                        x = MachineCode('100010', '1', '1', '11',
+                            self.dividableregisters[inp2][1], self.dividableregisters[inp3][1])
+                        x.display()
+
+                    #SP,BP,SI,DI
+                    if inp2 in self.PIregisters and inp3 in self.PIregisters:
+                        self.PIregisters[inp2][0][0] = self.PIregisters[inp3][0][0]
+                        x = MachineCode('100010', '1', '1', '11',
+                            self.PIregisters[inp2][1], self.PIregisters[inp3][1])
                
-                #8-bit reg addressing
-                #AH,AL,BH,BL,CH,CL,DH,DL
-                if inp2 in self.halfregisters and inp3 in self.halfregisters:
-                    self.halfregisters[inp2][0][0] = self.halfregisters[inp3][0][0]
-                    x = MachineCode('100010', '1', '0', '11',
+                    #8-bit reg addressing
+                    #AH,AL,BH,BL,CH,CL,DH,DL
+                    if inp2 in self.halfregisters and inp3 in self.halfregisters:
+                        self.halfregisters[inp2][0][0] = self.halfregisters[inp3][0][0]
+                        x = MachineCode('100010', '1', '0', '11',
                                     self.halfregisters[inp2][1], self.halfregisters[inp3][1])
-                    x.display()
-
-                if inp2 in self.dividableregisters and inp3.isdigit():
-                    inp3 = hex(int(inp3))
-                    #since hex is in the form "0x0000", the len of the greatest hex
-                    #that can be put into a 16-bit register is 6 
-                    if len(inp3) <= 6:
+                        x.display()
+                
+                if inp4 == "2":
+                    #imm is only done for hex nums
+                    if inp2 in self.dividableregisters and inp3.isalnum():
+                        #extracts the hex number
+                        inp3 = list(str(hex(int(inp3)))[2:])
                         
+                        if len(inp3) <= 6:
+                            self.dividableregisters[inp2][0].fset(self, inp3)
 
 
 
