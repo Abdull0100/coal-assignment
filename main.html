@@ -5,15 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <link rel="stylesheet" href="index.css" />
+    <script src="index.js" defer></script>
     <title>Document</title>
   </head>
   <body>
     <div id="input_and_button">
       <div id="input">
-        <input type="text" placeholder="instruction goes here" id="text_field"/>
+        <input
+          type="text"
+          placeholder="instruction goes here"
+          id="text_field"
+        />
       </div>
       <div id="button">
-        <button class="custom-btn btn-16">Execute</button>
+        <button class="custom-btn btn-16" onclick="execute_button()">Execute</button>
       </div>
     </div>
     <div class="databus" id="bus1"></div>
@@ -86,30 +91,30 @@
         <table>
           <tr>
             <td>AH</td>
-            <td>0</td>
+            <td id="AH"></td>
             <td>AL</td>
-            <td>0</td>
+            <td id="AL"></td>
           </tr>
 
           <tr>
             <td>BH</td>
-            <td>0</td>
+            <td id="BH"></td>
             <td>BL</td>
-            <td>0</td>
+            <td id="BL"></td>
           </tr>
 
           <tr>
             <td>CH</td>
-            <td>0</td>
+            <td id="CH"></td>
             <td>CL</td>
-            <td>0</td>
+            <td id="CL"></td>
           </tr>
 
           <tr>
             <td>DH</td>
-            <td>0</td>
+            <td id="DH"></td>
             <td>DL</td>
-            <td>0</td>
+            <td id="DL"></td>
           </tr>
         </table>
       </div>
