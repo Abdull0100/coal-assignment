@@ -183,6 +183,9 @@
   text-align: center;
   font-weight: bolder;
   padding-top: 2rem;
+  box-shadow:  15px 15px 30px #9d9d9d,
+             -15px -15px 30px #ffffff;
+  border-radius: 2rem;
   
 }
 
@@ -223,6 +226,8 @@
   width: 8rem;
   border: 1px solid black;
   margin-left: 3rem;
+  box-shadow:  15px 15px 42px #c3c3c3,
+             -15px -15px 42px #fdfdfd;
 }
 
 #reg2 {
@@ -230,6 +235,8 @@
   width: 8rem;
   border: 1px solid black;
   margin-right: 3rem;
+  box-shadow:  15px 15px 42px #c3c3c3,
+             -15px -15px 42px #fdfdfd;
 }
 
 .databus {
