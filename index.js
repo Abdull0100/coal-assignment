@@ -274,6 +274,24 @@ function executer(instruction) {
       memoryValues[dest_index] = parseInt(memoryValues[dest_index]) + 1;
         all_value_initial();
     }
+  } else if (instruction[0] === "dec") {
+    if ( // if destination is a register and source is a register
+      opCodes.includes(instruction[0]) &&
+      generalRegisters.includes(instruction[1])
+    ) {
+      let dest = instruction[1];
+      let dest_index = generalRegisters.indexOf(dest);
+      generalValues[dest_index] = parseInt(generalValues[dest_index]) - 1;
+        all_value_initial();
+    } else if ( // if destination is a register and source is a memory place
+      opCodes.includes(instruction[0]) &&
+      memoryPlaces.includes(instruction[1])
+    ) {
+      let dest = instruction[1];
+      let dest_index = memoryPlaces.indexOf(dest);
+      memoryValues[dest_index] = parseInt(memoryValues[dest_index]) - 1;
+        all_value_initial();
+    }
   }
 
 }

@@ -38,6 +38,7 @@
   border: 1px solid black;
   display: flex;
   flex-direction: column;
+  background-color: white;
   /* align-items: center; */
 }
 
@@ -46,7 +47,7 @@
   width: 100%;
   /* align-content: space-between; */
   /* justify-content: center; */
-  background-color: #00ff00;
+  background-color: white;
   /* align-items: center */
   justify-content: center;
 }
@@ -66,10 +67,13 @@
   height: auto;
   width: 30rem;
   border: 1px solid black;
+  display: flex;
+  flex-direction: column;
+  align-content: space-between;
+  justify-content: space-evenly;
 }
 
 .memory_cell {
-  
   height: 3rem;
   width: 5rem;
   border: 1px solid black;
@@ -115,75 +119,71 @@
   background-color: white;
   /* border: 4px solid black; */
   animation: fancy 5s infinite;
-  box-shadow:  5px 5px 23px #949494,
-             -5px -5px 23px #ffffff;
+  box-shadow: 5px 5px 23px #949494, -5px -5px 23px #ffffff;
   border-radius: 1rem;
-
 }
 
 @keyframes fancy {
-    0%{
-        border:4px solid rgb(187, 119, 244);
-        box-shadow:  5px 5px 23px rgb(241, 151, 151),
-             -5px -5px 23px rgb(187, 119, 244);
-    }
-    25%{
-        border:4px solid rgb(241, 151, 151);
-        box-shadow:  5px 5px 23px rgb(187, 119, 244),
-             -5px -5px 23px #ffffff;
-    }
-    50%{
-        border:4px solid violet;
-        box-shadow:  5px 5px 23px violet,
-             -5px -5px 23px pink;
-    }
-    75%{
-        border:4px solid pink;
-        box-shadow:  5px 5px 23px pink,
-             -5px -5px 23px rgb(214, 93, 214);
-    }
-    100%{
-        border:4px solid rgb(214, 93, 214);
-        box-shadow:  5px 5px 23px rgb(214, 93, 214),
-             -5px -5px 23px rgb(187, 119, 244);
-    }
+  0% {
+    border: 4px solid rgb(187, 119, 244);
+    box-shadow: 5px 5px 23px rgb(241, 151, 151),
+      -5px -5px 23px rgb(187, 119, 244);
+  }
+  25% {
+    border: 4px solid rgb(241, 151, 151);
+    box-shadow: 5px 5px 23px rgb(187, 119, 244), -5px -5px 23px #ffffff;
+  }
+  50% {
+    border: 4px solid violet;
+    box-shadow: 5px 5px 23px violet, -5px -5px 23px pink;
+  }
+  75% {
+    border: 4px solid pink;
+    box-shadow: 5px 5px 23px pink, -5px -5px 23px rgb(214, 93, 214);
+  }
+  100% {
+    border: 4px solid rgb(214, 93, 214);
+    box-shadow: 5px 5px 23px rgb(214, 93, 214),
+      -5px -5px 23px rgb(187, 119, 244);
+  }
 }
-
 
 #pc {
   height: 4rem;
   width: 15%;
   background-color: white;
   /* background-image: url(./memory.svg); */
-  border: .25rem solid black;
-  border-radius: .25rem;
-  
+  border: 0.25rem solid black;
+  border-radius: 0.25rem;
+
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 
-#pc_inside{
-    height: 2rem;
-    width: 80%;
-    border: .25rem solid black;
-    border-radius: .25rem;
-    
-    margin-top: auto;
-    margin-bottom: auto;
-    text-align: center;
-    padding: auto;
-    font-size: x-large;
-    font-weight: 900;
-}
+#pc_inside {
+  height: 2rem;
+  width: 80%;
+  border: 0.25rem solid black;
+  border-radius: 0.25rem;
 
+  margin-top: auto;
+  margin-bottom: auto;
+  text-align: center;
+  padding: auto;
+  font-size: x-large;
+  font-weight: 900;
+}
 
 #ir {
   height: 8rem;
   width: 50%;
   border: 1px solid black;
-  background-color: aquamarine;
+  font-size: xx-large;
+  text-align: center;
+  font-weight: bolder;
+  padding-top: 2rem;
+  
 }
 
 #alu {
@@ -193,18 +193,29 @@
   margin-top: 3rem;
   margin-left: auto;
   margin-right: auto;
-  background: linear-gradient(to right, #44a08d, #093637);
+  background-color: white;
+  animation: fancy 5s infinite;
+  box-shadow: 5px 5px 23px #949494, -5px -5px 23px #ffffff;
+  border-radius: 1rem;
+  font-size: xx-large;
+  text-align: center;
+  font-weight: bolder;
+  padding-top: 4rem;
+
 }
 
 #alu_registers {
-  height: 11rem;
+  height: 9rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: 5rem;
+  align-items: center;
+  width: 100%;
   padding-top: auto;
   padding-bottom: auto;
   background-color: aliceblue;
+  border: 1px solid black;
+
 }
 
 #reg1 {
@@ -232,13 +243,14 @@
 
 /* pc controller */
 #bus1 {
-  top: 27vh;
-  left: 9vw;
+  top: 16rem;
+  left: 9rem;
+  height: 14rem;
   background-color: black;
 }
 #bus2 {
   top: 16rem;
-  left: 11rem;
+  left: 9rem;
   width: 10rem;
   height: 0.5rem;
   background-color: black;
@@ -247,29 +259,30 @@
 /* ir memory right left */
 #bus3 {
   top: 32rem;
-  left: 30rem;
-  height: 15rem;
+  left: 33.5rem;
+  height: 19rem;
 }
 #bus4 {
   top: 32rem;
-  left: 10rem;
-  height: 15rem;
+  left: 9rem;
+  height: 19rem;
 }
 
 /* ir controller */
 #bus5 {
   top: 16rem;
-  left: 35rem;
+  left: 33.5rem;
+  height: 14rem;
 }
 #bus6 {
   top: 16rem;
-  left: 25.5rem;
+  left: 24rem;
   height: 0.5rem;
   width: 10rem;
 }
 
 /* alu datapath */
-#bus7 {
+/* #bus7 {
   top: 16rem;
   left: 45rem;
   width: 10rem;
@@ -280,33 +293,36 @@
   left: 45rem;
   width: 10rem;
   height: 0.5rem;
-}
+} */
 
 /* alu registers */
 #bus9 {
   top: 16rem;
-  left: 67rem;
+  left: 55rem;
+  height: 13rem;
 }
 
 /* alureg to memory */
 
 #bus10 {
   top: 29rem;
-  left: 67rem;
-  height: 19rem;
+  left: 55rem;
+  height: 24rem;
 }
 
-#bus11 {
+/* #bus11 {
   top: 16rem;
   left: 49.5rem;
   height: 32rem;
-}
+} */
 
 .pcir {
   width: 100%;
   display: flex;
   justify-content: space-around;
   padding: 2rem;
+  background-color: antiquewhite;
+  border: 3px solid black;  
 }
 
 /*---------- BODY ----------*/
@@ -344,7 +360,7 @@ td {
 }
 
 .custom-btn {
-    background-color: #fff;
+  background-color: #fff;
   width: 130px;
   height: 40px;
   color: #000;
@@ -357,11 +373,9 @@ td {
   transition: all 0.3s ease;
   /* position: relative; */
   /* display: inline-block; */
-  box-shadow:  6px 6px 12px #c3c3c3,
-             -6px -6px 12px #fdfdfd;
+  box-shadow: 6px 6px 12px #c3c3c3, -6px -6px 12px #fdfdfd;
 
-  
-border: none;
+  border: none;
 }
 
 #input_and_button {
@@ -372,19 +386,18 @@ border: none;
   padding: 1rem;
 }
 
-#text_field{
-    height: 0.7rem;
-    width: 18rem;
-    margin: 1rem;
-    padding: 1rem;
-    border-radius: 10px;
-    text-transform: uppercase;
-    font-weight: 700;
-    font-size: large;
-
+#text_field {
+  height: 0.7rem;
+  width: 18rem;
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 10px;
+  text-transform: uppercase;
+  font-weight: 700;
+  font-size: large;
 }
 
-.names{
+.names {
   text-align: center;
   height: 1.5rem;
   width: 100%;
@@ -392,9 +405,39 @@ border: none;
   font-weight: bolder;
 }
 
-.values{
+.values {
   text-align: center;
   height: 1.5rem;
   width: 100%;
   border: 1px solid black;
+}
+
+#alu_table {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#reg1{
+  height: 8rem;
+  width: 8rem;
+  border: 1px solid black;
+  margin-left: 3rem;
+  text-align: center;
+  font-size: xx-large;
+  font-weight: bolder;
+  
+}
+
+#reg2{
+  height: 8rem;
+  width: 8rem;
+  border: 1px solid black;
+  margin-right: 3rem;
+  text-align: center;
+  font-size: xx-large;
+  font-weight: bolder;
 }
