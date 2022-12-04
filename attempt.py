@@ -278,7 +278,7 @@ class Processor():
 1: Register to Register\n\
 2: Immediate to Register\n\
 3: Memory to Register\n\
-4: Register to Memory\n")
+4: Register to Memory\n").lower()
                     inp2 = input("Enter the first operand: ").lower()
                     inp3 = input("Enter the second operand: ").lower()
 
@@ -369,7 +369,7 @@ class Processor():
 1: Register to Register\n\
 2: Immediate to Register\n\
 3: Memory to Register\n\
-4: Register to Memory\n")
+4: Register to Memory\n").lower()
                     inp2 = input("Enter the first operand: ").lower()
                     inp3 = input("Enter the second operand: ").lower()
                     if mode == '1':
@@ -481,7 +481,7 @@ class Processor():
 1: Register to Register\n\
 2: Immediate to Register\n\
 3: Memory to Register\n\
-4: Register to Memory\n")
+4: Register to Memory\n").lower()
                     inp2 = input("Enter the first operand: ").lower()
                     inp3 = input("Enter the second operand: ").lower()
                     if mode == '1':
@@ -489,7 +489,12 @@ class Processor():
                         if inp2 in self.fullregisters.keys() and inp3 in self.fullregisters.keys():
                             num2 = int(''.join(self.fullregisters[inp2][0].fget(self)), base=16)
                             num3 = int(''.join(self.fullregisters[inp3][0].fget(self)), base=16)
-                            diff = list(hex(num2-num3)[2:].rjust(4,'0'))
+                            if num2 < num3:
+                                print()
+                                print("First operand is smaller than second operand")
+                                print()
+                            else:
+                                diff = list(hex(num2-num3)[2:].rjust(4,'0'))
                             if len(diff) > 4:
                                 print("Value too big to fit into register")
                                 print()
@@ -502,15 +507,13 @@ class Processor():
                             hexnum2 = int(''.join(self.halfregisters[inp2][0].fget(self)))
                             hexnum3 = int(''.join(self.halfregisters[inp3][0].fget(self)))
                             if hexnum2 < hexnum3:
-                                diff = self.complement(hexnum3, 16)
-                                diff += hexnum2
-                                diff = str(diff)
-                                diff = hex(int(diff,16))
-                                print(diff)
+                                print()
+                                print("First operand is less than second operand")
+                                print()
                             else:
                                 hexnum2 = int(''.join(self.halfregisters[inp2][0].fget(self)), base=16)
                                 hexnum3 = int(''.join(self.halfregisters[inp3][0].fget(self)), base=16)
-                                diff = list(hex(hexnum2-hexnum3)[2:].rjust(4,'0'))
+                                diff = list(hex(hexnum2-hexnum3)[2:].rjust(2,'0'))
                             if len(diff) > 2:
                                 print("Value too big to fit into register")
                                 print()
@@ -528,7 +531,11 @@ class Processor():
                             hexnum = copy.deepcopy(inp3)
                             hexnum = int(hexnum, base=16)
                             hexnum2 = int(''.join(self.fullregisters[inp2][0].fget(self)), base=16)
-                            diff = list(hex(hexnum-hexnum2)[2:])
+                            if hexnum < hexnum2:
+                                print()
+                                print("first operand is less than second operand")
+                            else:    
+                                diff = list(hex(hexnum-hexnum2)[2:]).rjust(4,'0')
                             if len(diff) <= 4:
                                 self.fullregisters[inp2][0].fset(self, diff)
                                 #insert machine code
@@ -542,7 +549,12 @@ class Processor():
                             hexnum = copy.deepcopy(inp3)
                             hexnum = int(hexnum, base=16)
                             hexnum2 = int(''.join(self.halfregisters[inp2][0].fget(self)), base=16)
-                            diff = list(hex(hexnum-hexnum2)[2:])
+                            if hexnum < hexnum2:
+                                print()
+                                print("first operand is less than second operand")
+                                print()
+                            else:
+                                diff = list(hex(hexnum-hexnum2)[2:]).rjust(2,'0')
                             if len(diff) <= 2:
                                 self.halfregisters[inp2][0].fset(self, diff)
                                 #insert machine code
@@ -555,7 +567,12 @@ class Processor():
                         if inp2 in self.fullregisters.keys() and inp3[1] in self.memory.keys():
                             hexnum2 = int(self.memory[inp3[1]], base=16)
                             hexnum = int(''.join(self.fullregisters[inp2][0].fget(self)), base=16)
-                            diff = list(hex(hexnum-hexnum2)[2:])
+                            if hexnum < hexnum2:
+                                print()
+                                print("first operand is less than second operand")
+                                print()
+                            else:
+                                diff = list(hex(hexnum-hexnum2)[2:]).rjust(4,'0')
                             if len(diff) > 4:
                                 print("Value too big to be loaded into register")
                             else:
@@ -565,7 +582,12 @@ class Processor():
                         elif inp2 in self.halfregisters.keys() and inp3[1] in self.memory.keys():
                             hexnum2 = int(self.memory[inp3[1]], base=16)
                             hexnum = int(''.join(self.halfregisters[inp2][0].fget(self)), base=16)
-                            diff = list(hex(hexnum-hexnum2)[2:])
+                            if hexnum < hexnum2:
+                                print()
+                                print("first operand is less than second operand")
+                                print()
+                            else:
+                                diff = list(hex(hexnum-hexnum2)[2:]).rjust(2,'0')
                             if len(diff) > 2:
                                 print("Value too big to be loaded into register")
                                 print()
@@ -581,15 +603,33 @@ class Processor():
                         if inp2[1] in self.memory.keys() and inp3 in self.fullregisters.keys():
                             hexnum2 = int(self.memory[inp2[1]], base=16)
                             hexnum = int(''.join(self.fullregisters[inp3][0].fget(self)), base=16)
-                            diff = hex(hexnum-hexnum2)[2:]
-                            self.memory[inp2[1]] = diff
+                            if hexnum < hexnum2:
+                                print()
+                                print("first operand is less than second operand")
+                                print()
+                            else:
+                                diff = hex(hexnum-hexnum2)[2:].rjust(4,'0')
+                            if len(diff) > 4:
+                                print()
+                                print("Output too big for register")
+                            else:
+                                self.memory[inp2[1]] = diff
                             #insert machine code
                         #8-bit mem-reg addressing (sub)
                         elif inp2[1] in self.memory.keys() and inp3 in self.halfregisters.keys():
                             hexnum2 = int(self.memory[inp2[1]], base=16)
                             hexnum = int(''.join(self.halfregisters[inp3][0].fget(self)), base=16)
-                            diff = hex(hexnum-hexnum2)[2:]
-                            self.memory[inp2[1]] = diff
+                            if hexnum < hexnum2:
+                                print()
+                                print("first operand is less than second operand")
+                                print()
+                            else:
+                                diff = hex(hexnum-hexnum2)[2:].rjust(2,'0')
+                            if len(diff) > 2:
+                                print()
+                                print("Output too big for register")
+                            else:
+                                self.memory[inp2[1]] = diff
                             #insert machine code
                         else:
                             print("Invalid instruction operands")
@@ -597,6 +637,84 @@ class Processor():
                     else:
                         print("Invalid mode input")
                         print()
+
+                elif inp1 == "dec":
+                    mode = input("Choose operand type:\n\
+1. reg16\n\
+2. reg8\n\
+3. mem\n\ ").lower()
+                    inp2 = input("Enter operand: ").lower()
+                    if mode == '1':
+                        #dec with 16-bit registers
+                        if self.fullregisters[inp2][0].fget(self) != ['0','0','0','0']:
+                            num2 = int(''.join(self.fullregisters[inp2][0].fget(self)), base=16)
+                            num3 = int(1,base=16)
+                            decreased = list(hex(num2-num3)[2:])
+                            self.fullregisters[inp2][0].fset(self, decreased)
+                            #insert machine code
+                    
+                    if mode == '2':
+                        #dec with 8-bit registers
+                        if self.halfregisters[inp2][0].fget(self) != ['0','0']:
+                            num2 = int(''.join(self.halfregisters[inp2][0].fget(self)), base=16)
+                            num3 = int(1,base=16)
+                            decreased = list(hex(num2-num3)[2:])
+                            self.halfregisters[inp2][0].fset(self, decreased)
+                            #insert machine code
+                    
+                    if mode == '3':
+                        #dec with mem
+                        if self.memory[inp2[1]] != '0000':
+                            num2 = int(self.memory[inp2[1]], base=16)
+                            num3 = int(1,base=16)
+                            decreased = hex(num2-num3)[2:].rjust(4,'0')
+                            self.memory[inp2[1]] = decreased
+                            #insert machine code
+
+
+                elif inp1 == "inc":
+                    mode = input("Choose operand type:\n\
+1. reg16\n\
+2. reg8\n\
+3. mem\n\ ").lower()
+                    inp2 = input("Enter operand: ").lower()
+                    if mode == '1':
+                        #inc with 16-bit registers
+                        num2 = int(''.join(self.fullregisters[inp2][0].fget(self)), base=16)
+                        num3 = int(1,base=16)
+                        increased = list(hex(num2+num3)[2:].rjust(4,'0'))
+                        if len(increased) > 4:
+                            print()
+                            print("Value too big to be loaded into register")
+                            print()
+                        else:
+                            self.fullregisters[inp2][0].fset(self, increased)
+                            #insert machine code
+                    
+                    if mode == '2':
+                        #inc with 8-bit registers
+                        num2 = int(''.join(self.halfregisters[inp2][0].fget(self)), base=16)
+                        num3 = int(1,base=16)
+                        increased = list(hex(num2+num3)[2:].rjust(2,'0'))
+                        if len(increased) > 2:
+                            print()
+                            print("Value too big to be loaded into register")
+                            print()
+                        else:
+                            self.halfregisters[inp2][0].fset(self, increased)
+                            #insert machine code
+                    
+                    if mode == '3':
+                        num2 = int(self.memory[inp2[1]], base=16)
+                        num3 = int(1,base=16)
+                        increased = hex(num2-num3)[2:].rjust(4,'0')
+                        if len(increased) > 4:
+                            print()
+                            print("Value too big to be loaded into register")
+                            print()
+                        else:
+                            self.memory[inp2[1]] = increased
+                            #insert machine code
 
 
 
@@ -608,4 +726,3 @@ print(proc.memory['0'])
 print(proc.AX)
 print(proc.AH)
 print(proc.AL)
-
