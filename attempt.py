@@ -251,25 +251,39 @@ class Processor():
               '7':'0000', '8':'0000', '9':'0000', 'A':'0000', 'B':'0000', 'C':'0000', 'D':'0000',
               'E':'0000', 'F':'0000'}
 
+    def prevComplement(self,n, b) :
+        maxNum, digits, num = 0, 0, n
+        while n > 1:
+            digits += 1
+            n = n // 10
+        maxDigit = b - 1
+        while digits :
+            maxNum = maxNum * 10 + maxDigit
+            digits -= 1
+        return maxNum - num
+
+    def complement(self,n, b) :
+        return self.prevComplement(n, b) + 1
+
+
     #method for the processor to take instruction input from the user
     def procinput(self):
         while True:
             inp1 = input("Enter the instruction: ").lower()
             if inp1 == 'exit':
                 break
-            if inp1 in self.opcodes.keys():
+            elif inp1 in self.opcodes.keys():
                 if inp1 == "mov":
                     mode = input("Choose an addressing mode:\n\
 1: Register to Register\n\
 2: Immediate to Register\n\
 3: Memory to Register\n\
 4: Register to Memory\n")
-
                     inp2 = input("Enter the first operand: ").lower()
                     inp3 = input("Enter the second operand: ").lower()
 
                     if mode == "1":
-                        #16-bit reg-reg addressing
+                        #16-bit reg-reg addressing (mov)
                         #AX,BX,CX,DX,SP,BP,SI,DI
                         if inp2 in self.fullregisters.keys() and inp3 in self.fullregisters.keys():
                             self.fullregisters[inp2][0].fset(self, self.fullregisters[inp3][0].fget(self))
@@ -277,7 +291,7 @@ class Processor():
                                 self.fullregisters[inp2][1], self.fullregisters[inp3][1])
                             x.display()
                        
-                        #8-bit reg-reg addressing
+                        #8-bit reg-reg addressing (mov)
                         #AH,AL,BH,BL,CH,CL,DH,DL
                         elif inp2 in self.halfregisters.keys() and inp3 in self.halfregisters.keys():
                             self.halfregisters[inp2][0].fset(self, self.halfregisters[inp3][0].fget(self))
@@ -290,7 +304,7 @@ class Processor():
 
                     elif mode == '2':
                         #imm is only done for hex nums
-                        #16-bit reg-imm addressing
+                        #16-bit reg-imm addressing (mov)
                         if inp2 in self.fullregisters.keys() and inp3.isalnum():
                             #extracts the hex number
                             hexnum = copy.deepcopy(inp3)
@@ -298,11 +312,12 @@ class Processor():
                             #each case of the hex value moving into ax,bx,cx,dx
                             if len(hexnum) <= 4:
                                 self.fullregisters[inp2][0].fset(self, hexnum)
+                                #insert machine code
                             else:
                                 print("Invalid sized value")
                                 print()
 
-                        #8-bit reg-imm addressing
+                        #8-bit reg-imm addressing (mov)
                         elif inp2 in self.halfregisters.keys() and inp3.isalnum():
                             #extracts the hex number
                             hexnum = copy.deepcopy(inp3)
@@ -310,6 +325,7 @@ class Processor():
                             #each case of the hex value moving into lower and higher registers                        
                             if len(hexnum) <= 2:
                                 self.halfregisters[inp2][0].fset(self,hexnum)
+                                #insert machine code
                             else:
                                 print("Invalid sized value")
                                 print()
@@ -317,25 +333,29 @@ class Processor():
                             print("Invalid instruction operands")
                             print()
                     elif mode == '3':
-                        #16-bit reg-mem addressing
+                        #16-bit reg-mem addressing (mov)
                         if inp2 in self.fullregisters.keys() and inp3[1] in self.memory.keys():
                             self.fullregisters[inp2][0].fset(self, list(self.memory[inp3[1]]))
-                        #8-bit reg-mem addressing
+                            #insert machine code
+                        #8-bit reg-mem addressing (mov)
                         elif inp2 in self.halfregisters.keys() and inp3[1] in self.memory.keys():
                             self.halfregisters[inp2][0].fset(self, list(self.memory[inp3[1]]))
+                            #insert machine code
                         
                         else:
                             print("Invalid instruction operands")
                             print()
 
                     elif mode == '4':
-                    #16-bit mem-reg addressing
+                        #16-bit mem-reg addressing (mov)
                         if inp2[1] in self.memory.keys() and inp3 in self.fullregisters.keys():
                             self.memory[inp2[1]] = ''.join(self.fullregisters[inp3][0].fget(self))
+                            #insert machine code
                         
-                        #8-bit mem-reg addressing
+                        #8-bit mem-reg addressing (mov)
                         elif inp2[1] in self.memory.keys() and inp3 in self.halfregisters.keys():
                             self.memory[inp2[1]] = ''.join(self.halfregisters[inp3][0].fget(self))
+                            #insert machine code
                        
                         else:
                             print("Invalid instruction operands")
@@ -343,15 +363,249 @@ class Processor():
                     else:
                         print("Invalid mode input")
                         print()
-            
+
+                elif inp1 == "add":
+                    mode = input("Choose an addressing mode:\n\
+1: Register to Register\n\
+2: Immediate to Register\n\
+3: Memory to Register\n\
+4: Register to Memory\n")
+                    inp2 = input("Enter the first operand: ").lower()
+                    inp3 = input("Enter the second operand: ").lower()
+                    if mode == '1':
+                        #16-bit reg-reg addressing (add)
+                        if inp2 in self.fullregisters.keys() and inp3 in self.fullregisters.keys():
+                            num2 = int(''.join(self.fullregisters[inp2][0].fget(self)), base=16)
+                            num3 = int(''.join(self.fullregisters[inp3][0].fget(self)), base=16)
+                            sum = list(hex(num2+num3)[2:])
+                            if len(sum) > 4:
+                                print("Value too big to fit into register")
+                                print()
+                            else:   
+                                self.fullregisters[inp2][0].fset(self, sum)
+                            #insert machine code
+                        
+                        #8-bit reg-reg addressing (add)
+                        elif inp2 in self.halfregisters.keys() and inp3 in self.halfregisters.keys():
+                            hexnum2 = int(''.join(self.halfregisters[inp2][0].fget(self)), base=16)
+                            hexnum3 = int(''.join(self.halfregisters[inp3][0].fget(self)), base=16)
+                            sum = list(hex(hexnum2+hexnum3)[2:])
+                            if len(sum) > 2:
+                                print("Value too big to fit into register")
+                                print()
+                            else:   
+                                self.halfregisters[inp2][0].fset(self, sum)
+                            #insert machine code
+                        else:
+                            print("Invalid instruction operands")
+                            print()
+                    
+                    elif mode == "2":
+                        #16-bit reg-reg addressing (add)
+                        if inp2 in self.fullregisters.keys() and inp3.isalnum():
+                            #extracts the hex number
+                            hexnum = copy.deepcopy(inp3)
+                            hexnum = int(hexnum, base=16)
+                            hexnum2 = int(''.join(self.fullregisters[inp2][0].fget(self)), base=16)
+                            sum = list(hex(hexnum+hexnum2)[2:])
+                            if len(sum) <= 4:
+                                self.fullregisters[inp2][0].fset(self, sum)
+                                #insert machine code
+                            else:
+                                print("Invalid sized value")
+                                print()
+
+                        #8-bit reg-reg addressing (add)
+                        if inp2 in self.halfregisters.keys() and inp3.isalnum():
+                            #extracts the hex number
+                            hexnum = copy.deepcopy(inp3)
+                            hexnum = int(hexnum, base=16)
+                            hexnum2 = int(''.join(self.halfregisters[inp2][0].fget(self)), base=16)
+                            sum = list(hex(hexnum+hexnum2)[2:])
+                            if len(sum) <= 2:
+                                self.halfregisters[inp2][0].fset(self, sum)
+                                #insert machine code
+                            else:
+                                print("Invalid sized value")
+                                print()
+                        
+                    elif mode == '3':
+                        #16-bit reg-mem addressing (add)
+                        if inp2 in self.fullregisters.keys() and inp3[1] in self.memory.keys():
+                            hexnum2 = int(self.memory[inp3[1]], base=16)
+                            hexnum = int(''.join(self.fullregisters[inp2][0].fget(self)), base=16)
+                            sum = list(hex(hexnum+hexnum2)[2:])
+                            if len(sum) > 4:
+                                print("Value too big to be loaded into register")
+                            else:
+                                self.fullregisters[inp2][0].fset(self, sum)
+                            #insert machine code
+                        #8-bit reg-mem addressing (add)
+                        elif inp2 in self.halfregisters.keys() and inp3[1] in self.memory.keys():
+                            hexnum2 = int(self.memory[inp3[1]], base=16)
+                            hexnum = int(''.join(self.halfregisters[inp2][0].fget(self)), base=16)
+                            sum = list(hex(hexnum+hexnum2)[2:])
+                            if len(sum) > 2:
+                                print("Value too big to be loaded into register")
+                                print()
+                            else:
+                                self.halfregisters[inp2][0].fset(self, sum)
+                            #insert machine code
+                        else:
+                            print("Invalid instruction operands")
+                            print()
+                    
+                    elif mode == "4":
+                        #16-bit mem-reg addressing (add)
+                        if inp2[1] in self.memory.keys() and inp3 in self.fullregisters.keys():
+                            hexnum2 = int(self.memory[inp2[1]], base=16)
+                            hexnum = int(''.join(self.fullregisters[inp3][0].fget(self)), base=16)
+                            sum = hex(hexnum+hexnum2)[2:]
+                            self.memory[inp2[1]] = sum
+                            #insert machine code
+                        #8-bit mem-reg addressing (add)
+                        elif inp2[1] in self.memory.keys() and inp3 in self.halfregisters.keys():
+                            hexnum2 = int(self.memory[inp2[1]], base=16)
+                            hexnum = int(''.join(self.halfregisters[inp3][0].fget(self)), base=16)
+                            sum = hex(hexnum+hexnum2)[2:]
+                            self.memory[inp2[1]] = sum
+                            #insert machine code
+                        else:
+                            print("Invalid instruction operands")
+                            print()
+                    else:
+                        print("Invalid mode input")
+                        print()
+                elif inp1 == "sub":
+                    mode = input("Choose an addressing mode:\n\
+1: Register to Register\n\
+2: Immediate to Register\n\
+3: Memory to Register\n\
+4: Register to Memory\n")
+                    inp2 = input("Enter the first operand: ").lower()
+                    inp3 = input("Enter the second operand: ").lower()
+                    if mode == '1':
+                        #16-bit reg-reg addressing (sub)
+                        if inp2 in self.fullregisters.keys() and inp3 in self.fullregisters.keys():
+                            num2 = int(''.join(self.fullregisters[inp2][0].fget(self)), base=16)
+                            num3 = int(''.join(self.fullregisters[inp3][0].fget(self)), base=16)
+                            diff = list(hex(num2-num3)[2:].rjust(4,'0'))
+                            if len(diff) > 4:
+                                print("Value too big to fit into register")
+                                print()
+                            else:   
+                                self.fullregisters[inp2][0].fset(self, diff)
+                            #insert machine code
+                        
+                        #8-bit reg-reg addressing (sub)
+                        elif inp2 in self.halfregisters.keys() and inp3 in self.halfregisters.keys():
+                            hexnum2 = int(''.join(self.halfregisters[inp2][0].fget(self)))
+                            hexnum3 = int(''.join(self.halfregisters[inp3][0].fget(self)))
+                            if hexnum2 < hexnum3:
+                                diff = self.complement(hexnum3, 16)
+                                diff += hexnum2
+                                diff = str(diff)
+                                diff = hex(int(diff,16))
+                                print(diff)
+                            else:
+                                hexnum2 = int(''.join(self.halfregisters[inp2][0].fget(self)), base=16)
+                                hexnum3 = int(''.join(self.halfregisters[inp3][0].fget(self)), base=16)
+                                diff = list(hex(hexnum2-hexnum3)[2:].rjust(4,'0'))
+                            if len(diff) > 2:
+                                print("Value too big to fit into register")
+                                print()
+                            else:   
+                                self.halfregisters[inp2][0].fset(self, diff)
+                            #insert machine code
+                        else:
+                            print("Invalid instruction operands")
+                            print()
+                    
+                    elif mode == "2":
+                        #16-bit reg-imm addressing (sub)
+                        if inp2 in self.fullregisters.keys() and inp3.isalnum():
+                            #extracts the hex number
+                            hexnum = copy.deepcopy(inp3)
+                            hexnum = int(hexnum, base=16)
+                            hexnum2 = int(''.join(self.fullregisters[inp2][0].fget(self)), base=16)
+                            diff = list(hex(hexnum-hexnum2)[2:])
+                            if len(diff) <= 4:
+                                self.fullregisters[inp2][0].fset(self, diff)
+                                #insert machine code
+                            else:
+                                print("Invalid sized value")
+                                print()
+
+                        #8-bit reg-imm addressing (sub)
+                        if inp2 in self.halfregisters.keys() and inp3.isalnum():
+                            #extracts the hex number
+                            hexnum = copy.deepcopy(inp3)
+                            hexnum = int(hexnum, base=16)
+                            hexnum2 = int(''.join(self.halfregisters[inp2][0].fget(self)), base=16)
+                            diff = list(hex(hexnum-hexnum2)[2:])
+                            if len(diff) <= 2:
+                                self.halfregisters[inp2][0].fset(self, diff)
+                                #insert machine code
+                            else:
+                                print("Invalid sized value")
+                                print()
+                        
+                    elif mode == '3':
+                        #16-bit reg-mem addressing (sub)
+                        if inp2 in self.fullregisters.keys() and inp3[1] in self.memory.keys():
+                            hexnum2 = int(self.memory[inp3[1]], base=16)
+                            hexnum = int(''.join(self.fullregisters[inp2][0].fget(self)), base=16)
+                            diff = list(hex(hexnum-hexnum2)[2:])
+                            if len(diff) > 4:
+                                print("Value too big to be loaded into register")
+                            else:
+                                self.fullregisters[inp2][0].fset(self, diff)
+                            #insert machine code
+                        #8-bit reg-mem addressing (sub)
+                        elif inp2 in self.halfregisters.keys() and inp3[1] in self.memory.keys():
+                            hexnum2 = int(self.memory[inp3[1]], base=16)
+                            hexnum = int(''.join(self.halfregisters[inp2][0].fget(self)), base=16)
+                            diff = list(hex(hexnum-hexnum2)[2:])
+                            if len(diff) > 2:
+                                print("Value too big to be loaded into register")
+                                print()
+                            else:
+                                self.halfregisters[inp2][0].fset(self, diff)
+                            #insert machine code
+                        else:
+                            print("Invalid instruction operands")
+                            print()
+                    
+                    elif mode == "4":
+                        #16-bit mem-reg addressing (sub)
+                        if inp2[1] in self.memory.keys() and inp3 in self.fullregisters.keys():
+                            hexnum2 = int(self.memory[inp2[1]], base=16)
+                            hexnum = int(''.join(self.fullregisters[inp3][0].fget(self)), base=16)
+                            diff = hex(hexnum-hexnum2)[2:]
+                            self.memory[inp2[1]] = diff
+                            #insert machine code
+                        #8-bit mem-reg addressing (sub)
+                        elif inp2[1] in self.memory.keys() and inp3 in self.halfregisters.keys():
+                            hexnum2 = int(self.memory[inp2[1]], base=16)
+                            hexnum = int(''.join(self.halfregisters[inp3][0].fget(self)), base=16)
+                            diff = hex(hexnum-hexnum2)[2:]
+                            self.memory[inp2[1]] = diff
+                            #insert machine code
+                        else:
+                            print("Invalid instruction operands")
+                            print()
+                    else:
+                        print("Invalid mode input")
+                        print()
+
 
 
 proc = Processor()
-
+proc.AX = ['1','2','3','4']
+proc.BX = ['1','2','3','5']
 proc.procinput()
-print(proc.AX)
 print(proc.memory['0'])
-print(proc.SP)
+print(proc.AX)
 print(proc.AH)
 print(proc.AL)
 
