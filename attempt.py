@@ -1076,6 +1076,62 @@ class Processor():
                     else:
                         print("Invalid instruction operands")
                         print()
+		elif inp1 == 'shl':
+                    mode = input("Choose an addressing mode:\n\
+1: Register to immediate\n\
+2: Memory to Immediate\n\
+")
+                    inp2 = input("Enter the first operand: ").lower()
+                    inp3 = input("Enter the first operand: ").lower()
+
+                    if mode == "1":
+                        # 16-bit reg-imm addressing (shl)
+                        if inp2 in self.fullregisters.keys() and inp3.isalnum():
+                            #extracts the hex number
+                            hexnum = copy.deepcopy(inp3)
+                            hexnum = int(hexnum, base = 16)
+                            #each case of the hex value moving into ax,bx,cx,dx
+                            for i in range(hexnum):
+                                self.fullregisters[inp2][0].append('0')
+                                self.fullregisters[inp2][0] = self.fullregisters[inp2][0][1:]
+
+
+                            # self.fullregisters[inp2][0].fset(self, hexnum)
+                                #insert machine code
+
+                        #8-bit reg-imm addressing (shl)
+                        elif inp2 in self.halfregisters.keys() and inp3.isalnum():
+                            #extracts the hex number
+                            hexnum = copy.deepcopy(inp3)
+                            hexnum = int(hexnum, base = 16)
+                            #each case of the hex value moving into ax,bx,cx,dx
+                            for i in range(hexnum):
+                                self.halfregisters[inp2][0].append('0')
+                                self.halfregisters[inp2][0] = self.halfregisters[inp2][0][1:]
+                        else:
+                            print("Invalid instruction operands")
+                            print()
+                    
+                    elif mode == "2":
+                        #16-bit mem-imm addressing (shl)
+                        if inp2 in self.memory.keys() and inp3.isalnum():
+                            #extracts the hex number
+                            num = copy.deepcopy(inp3)
+                            num = int(hexnum, base = 16)
+                            num2 = self.memory[inp2[1]]
+                            for i in range(num):
+                                num2.append('0')
+                                num2 = num2[1:]
+                            self.memory[inp2[1]].fset(self, num2)
+                            #insert machine code
+			else:
+				print("Invalid Mode")
+				print()
+                    else:
+                        print("Invalid instruction operands")
+                        print()
+		    
+
 
                 
 
